@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load custom_filters %}
+
 {% block breadcrumbs %}
     <div class="page-heading">
         <div class="d-flex justify-content-between align-items-center">
@@ -10,7 +11,7 @@
                 <p class="text-muted mb-0">{% trans "Sipariş takip sistemine hoş geldiniz" %}</p>
             </div>
             <div class="btn-group">
-                <span class="badge bg-light text-dark">
+                <span class="badge bg-secondary">
                     <i class="bi bi-calendar3 me-1"></i>
                     {{ current_date }}
                 </span>
@@ -24,11 +25,11 @@
         <section class="row">
             {% for stat in dashboard_stats %}
                 <div class="col-6 col-lg-3 col-md-6 mb-4">
-                    <div class="card stat-card h-100">
+                    <div class="card h-100">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="flex-grow-1">
-                                    <h6 class="text-muted font-semibold mb-2">{{ stat.title }}</h6>
+                                    <h6 class="text-muted fw-semibold mb-2">{{ stat.title }}</h6>
                                     <h3 class="fw-bold mb-1">
                                         {% if stat.is_currency %}
                                             ₺{{ stat.value|floatformat:0|default:"0" }}
@@ -40,8 +41,9 @@
                                         <i class="bi bi-arrow-up-right me-1"></i>{{ stat.trend }}
                                     </small>
                                 </div>
-                                <div class="stat-icon" style="background: {{ stat.bg_color }}">
-                                    <i class="{{ stat.icon }}"></i>
+                                <div class="d-flex align-items-center justify-content-center rounded text-white"
+                                     style="width: 50px; height: 50px; background: {{ stat.bg_color }}">
+                                    <i class="{{ stat.icon }} fs-4"></i>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +64,7 @@
                     <div class="card-body p-0">
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
-                                <thead class="table-light">
+                                <thead>
                                 <tr>
                                     <th class="ps-4" style="width: 40px;"></th>
                                     <th>{% trans "Müşteri" %}</th>
@@ -78,14 +80,15 @@
                                 </thead>
                                 <tbody>
                                 {% for stat in musteri_istatistikleri %}
-                                    <tr class="customer-row" data-bs-toggle="collapse"
-                                        data-bs-target="#orders-{{ forloop.counter }}" style="cursor: pointer;">
+                                    <tr data-bs-toggle="collapse" data-bs-target="#orders-{{ forloop.counter }}"
+                                        style="cursor: pointer;">
                                         <td class="ps-4">
-                                            <i class="bi bi-chevron-right toggle-icon"></i>
+                                            <i class="bi bi-chevron-right"></i>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="customer-avatar me-3">
+                                                <div class="d-flex align-items-center justify-content-center rounded text-white fw-bold me-3"
+                                                     style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                                     {{ stat.musteri.ad|first }}
                                                 </div>
                                                 <div>
@@ -95,14 +98,14 @@
                                             </div>
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge bg-light text-dark">{{ stat.musteri.ulke }}</span>
+                                            <span class="badge bg-secondary">{{ stat.musteri.ulke }}</span>
                                         </td>
                                         <td class="text-center">
                                             <span class="badge bg-primary">{{ stat.toplam_siparis }}</span>
                                         </td>
                                         <td class="text-center">
                                             {% if stat.bekleyen_siparis > 0 %}
-                                                <span class="badge bg-warning">{{ stat.bekleyen_siparis }}</span>
+                                                <span class="badge bg-warning text-dark">{{ stat.bekleyen_siparis }}</span>
                                             {% else %}
                                                 <span class="text-muted">-</span>
                                             {% endif %}
@@ -111,13 +114,13 @@
                                             <span class="badge bg-success">{{ stat.tamamlanan_siparis }}</span>
                                         </td>
                                         <td class="text-center">
-                                            <div class="progress-wrapper">
-                                                <div class="progress" style="height: 8px;">
+                                            <div style="min-width: 100px;">
+                                                <div class="progress mb-1" style="height: 8px;">
                                                     <div class="progress-bar bg-success"
                                                          style="width: {{ stat.tamamlanma_orani }}%"
                                                          role="progressbar"></div>
                                                 </div>
-                                                <small class="text-muted mt-1">{{ stat.tamamlanma_orani }}%</small>
+                                                <small class="text-muted">{{ stat.tamamlanma_orani }}%</small>
                                             </div>
                                         </td>
                                         <td class="text-end">
@@ -137,66 +140,68 @@
                                             {% endif %}
                                         </td>
                                     </tr>
-                                    <tr class="collapse orders-collapse" id="orders-{{ forloop.counter }}">
+                                    <tr class="collapse" id="orders-{{ forloop.counter }}">
                                         <td colspan="10" class="p-0">
-                                            <div class="orders-detail-container">
-                                                <div class="orders-detail-content">
-                                                    <h6 class="mb-3">
-                                                        <i class="bi bi-box-seam me-2"></i>
-                                                        {% trans "Sipariş Detayları" %} - {{ stat.musteri.ad }}
-                                                    </h6>
-                                                    <div class="table-responsive">
-                                                        <table class="table table-sm orders-detail-table">
-                                                            <thead>
-                                                            <tr>
-                                                                <th>{% trans "Sipariş No" %}</th>
-                                                                <th>{% trans "Ürün" %}</th>
-                                                                <th class="text-center">{% trans "Miktar" %}</th>
-                                                                <th class="text-end">{% trans "Fiyat" %}</th>
-                                                                <th class="text-end">{% trans "Toplam" %}</th>
-                                                                <th class="text-center">{% trans "Durum" %}</th>
-                                                                <th class="text-center">{% trans "Sipariş Tarihi" %}</th>
-                                                                <th class="text-center">{% trans "Sevk Tarihi" %}</th>
-                                                                <th>{% trans "Üretici" %}</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            {% for siparis in stat.siparisler %}
+                                            <div class="p-4 bg-dark bg-opacity-25">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h6 class="mb-3">
+                                                            <i class="bi bi-box-seam me-2"></i>
+                                                            {% trans "Sipariş Detayları" %} - {{ stat.musteri.ad }}
+                                                        </h6>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-sm table-hover mb-0">
+                                                                <thead>
                                                                 <tr>
-                                                                    <td>
-                                                                        <strong class="text-primary">{{ siparis.siparis_no }}</strong>
-                                                                    </td>
-                                                                    <td>{{ siparis.urun_cinsi }}</td>
-                                                                    <td class="text-center">
-                                                                        <span class="badge bg-light text-dark">{{ siparis.miktar }}</span>
-                                                                    </td>
-                                                                    <td class="text-end">
-                                                                        ₺{{ siparis.fiyat|floatformat:2 }}</td>
-                                                                    <td class="text-end">
-                                                                        <strong>₺{{ siparis.get_toplam_tutar|floatformat:2 }}</strong>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                                <span class="badge badge-status bg-{{ siparis.durum|get_durum_class }}">
-                                                                                    {{ siparis.get_durum_display }}
-                                                                                </span>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        <small>{{ siparis.siparis_tarihi|date:"d.m.Y" }}</small>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        {% if siparis.sevk_tarihi %}
-                                                                            <small>{{ siparis.sevk_tarihi|date:"d.m.Y" }}</small>
-                                                                        {% else %}
-                                                                            <span class="text-muted">-</span>
-                                                                        {% endif %}
-                                                                    </td>
-                                                                    <td>
-                                                                        <small class="text-muted">{{ siparis.uretici }}</small>
-                                                                    </td>
+                                                                    <th>{% trans "Sipariş No" %}</th>
+                                                                    <th>{% trans "Ürün" %}</th>
+                                                                    <th class="text-center">{% trans "Miktar" %}</th>
+                                                                    <th class="text-end">{% trans "Fiyat" %}</th>
+                                                                    <th class="text-end">{% trans "Toplam" %}</th>
+                                                                    <th class="text-center">{% trans "Durum" %}</th>
+                                                                    <th class="text-center">{% trans "Sipariş Tarihi" %}</th>
+                                                                    <th class="text-center">{% trans "Sevk Tarihi" %}</th>
+                                                                    <th>{% trans "Üretici" %}</th>
                                                                 </tr>
-                                                            {% endfor %}
-                                                            </tbody>
-                                                        </table>
+                                                                </thead>
+                                                                <tbody>
+                                                                {% for siparis in stat.siparisler %}
+                                                                    <tr>
+                                                                        <td>
+                                                                            <strong class="text-primary">{{ siparis.siparis_no }}</strong>
+                                                                        </td>
+                                                                        <td>{{ siparis.urun_cinsi }}</td>
+                                                                        <td class="text-center">
+                                                                            <span class="badge bg-secondary">{{ siparis.miktar }}</span>
+                                                                        </td>
+                                                                        <td class="text-end">
+                                                                            ₺{{ siparis.fiyat|floatformat:2 }}</td>
+                                                                        <td class="text-end">
+                                                                            <strong>₺{{ siparis.get_toplam_tutar|floatformat:2 }}</strong>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <span class="badge bg-{{ siparis.durum|get_durum_class }}">
+                                                                                {{ siparis.get_durum_display }}
+                                                                            </span>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <small>{{ siparis.siparis_tarihi|date:"d.m.Y" }}</small>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            {% if siparis.sevk_tarihi %}
+                                                                                <small>{{ siparis.sevk_tarihi|date:"d.m.Y" }}</small>
+                                                                            {% else %}
+                                                                                <span class="text-muted">-</span>
+                                                                            {% endif %}
+                                                                        </td>
+                                                                        <td>
+                                                                            <small class="text-muted">{{ siparis.uretici }}</small>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -224,9 +229,11 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center">
-                                <div class="avatar avatar-lg me-3">
-                                    <img src="{% static 'users/assets/compiled/jpg/1.jpg' %}" alt="Profile"
-                                         class="rounded-circle">
+                                <div class="me-3">
+                                    <img src="{% static 'users/assets/compiled/jpg/1.jpg' %}"
+                                         alt="Profile"
+                                         class="rounded-circle"
+                                         style="width: 60px; height: 60px;">
                                 </div>
                                 <div>
                                     <h5 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h5>
@@ -250,237 +257,4 @@
             </div>
         </section>
     </div>
-
-    <style>
-        .stat-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-        }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.3rem;
-            flex-shrink: 0;
-        }
-
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .card-header {
-            border-bottom: 1px solid #e9ecef;
-            background: transparent;
-            padding: 1.25rem 1.5rem;
-        }
-
-        .customer-row {
-            transition: all 0.2s ease;
-        }
-
-        .customer-row:hover {
-            background-color: #f8f9fa;
-        }
-
-        .customer-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .progress-wrapper {
-            min-width: 100px;
-        }
-
-        .progress {
-            border-radius: 10px;
-            background-color: #e9ecef;
-        }
-
-        .progress-bar {
-            border-radius: 10px;
-        }
-
-        .table th {
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            padding: 1rem 0.75rem;
-            border-bottom: 2px solid #dee2e6;
-        }
-
-        .table td {
-            padding: 1rem 0.75rem;
-            vertical-align: middle;
-        }
-
-        .avatar img {
-            border: 3px solid #e9ecef;
-            transition: border-color 0.3s ease;
-        }
-
-        .avatar img:hover {
-            border-color: #007bff;
-        }
-
-        .badge {
-            padding: 0.4rem 0.8rem;
-            font-weight: 500;
-            font-size: 0.8rem;
-        }
-
-        .toggle-icon {
-            transition: transform 0.3s ease;
-            color: #6c757d;
-            font-size: 1rem;
-        }
-
-        .customer-row:not(.collapsed) .toggle-icon {
-            transform: rotate(90deg);
-        }
-
-        .orders-collapse {
-            background-color: #f8f9fa;
-        }
-
-        .orders-detail-container {
-            padding: 1.5rem 2rem;
-            background: linear-gradient(135deg, #f5f7fa 0%, #f8f9fa 100%);
-        }
-
-        .orders-detail-content {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .orders-detail-table {
-            margin-bottom: 0;
-        }
-
-        .orders-detail-table thead th {
-            background-color: #f8f9fa;
-            font-size: 0.7rem;
-            padding: 0.75rem 0.5rem;
-            border-bottom: 2px solid #dee2e6;
-        }
-
-        .orders-detail-table tbody td {
-            padding: 0.75rem 0.5rem;
-            font-size: 0.875rem;
-        }
-
-        .orders-detail-table tbody tr {
-            transition: background-color 0.2s ease;
-        }
-
-        .orders-detail-table tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .badge-status {
-            font-size: 0.75rem;
-            padding: 0.35rem 0.65rem;
-            font-weight: 500;
-        }
-
-        .bg-onay_bekliyor {
-            background-color: #ffc107 !important;
-        }
-
-        .bg-onaylandi {
-            background-color: #17a2b8 !important;
-        }
-
-        .bg-malzeme_satin_alma {
-            background-color: #6c757d !important;
-        }
-
-        .bg-uretimde {
-            background-color: #007bff !important;
-        }
-
-        .bg-print_tkac {
-            background-color: #343a40 !important;
-        }
-
-        .bg-boya {
-            background-color: #28a745 !important;
-        }
-
-        .bg-aksesuar_montaji {
-            background-color: #6c757d !important;
-        }
-
-        .bg-kalite_kontrol {
-            background-color: #ffc107 !important;
-        }
-
-        .bg-paketleme {
-            background-color: #17a2b8 !important;
-        }
-
-        .bg-teslime_gonderildi {
-            background-color: #007bff !important;
-        }
-
-        .bg-teslim_edildi {
-            background-color: #28a745 !important;
-        }
-
-        .bg-tamamlandi {
-            background-color: #28a745 !important;
-        }
-
-        .bg-iade_pererabotka {
-            background-color: #dc3545 !important;
-        }
-
-        .bg-iptal {
-            background-color: #dc3545 !important;
-        }
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const rows = document.querySelectorAll('.customer-row[data-bs-toggle="collapse"]');
-
-            rows.forEach(row => {
-                row.addEventListener('click', function () {
-                    const icon = this.querySelector('.toggle-icon');
-                    const target = document.querySelector(this.getAttribute('data-bs-target'));
-
-                    if (target.classList.contains('show')) {
-                        icon.style.transform = 'rotate(0deg)';
-                    } else {
-                        icon.style.transform = 'rotate(90deg)';
-                    }
-                });
-            });
-        });
-    </script>
 {% endblock %}
