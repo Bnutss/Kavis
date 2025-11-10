@@ -1,0 +1,205 @@
+{% extends 'mainmenu/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <header class="mb-3">
+        <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+        </a>
+    </header>
+    <div class="page-heading">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-12 col-md-6 order-md-1 order-last">
+                    <h3>{% trans "Ürünler" %}</h3>
+                </div>
+                <div class="col-12 col-md-6 order-md-2 order-first">
+                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'users:dashboard' %}">{% trans "Dashboard" %}</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">{% trans "Ürünler" %}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">{% trans "Ürün Listesi" %}</h5>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#urunModal"
+                            onclick="openCreateModal()">
+                        <i class="bi bi-plus-circle"></i> {% trans "Yeni Ürün" %}
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="table1">
+                    <thead>
+                    <tr>
+                        <th>{% trans "Fotoğraf" %}</th>
+                        <th>{% trans "Ürün Adı" %}</th>
+                        <th>{% trans "Fiyat" %}</th>
+                        <th>{% trans "Oluşturulma Tarihi" %}</th>
+                        <th>{% trans "İşlemler" %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for urun in urunler %}
+                        <tr>
+                            <td>
+                                {% if urun.fotograf %}
+                                    <img src="{{ urun.fotograf.url }}" alt="{{ urun.ad }}"
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                {% else %}
+                                    <div style="width: 50px; height: 50px; background: #e9ecef; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-image text-muted"></i>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td>{{ urun.ad }}</td>
+                            <td>₺{{ urun.fiyat|floatformat:2 }}</td>
+                            <td>{{ urun.olusturulma_tarihi|date:"d.m.Y H:i" }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning"
+                                        onclick="openEditModal({{ urun.id }}, '{{ urun.ad|escapejs }}', {{ urun.fiyat }})">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="openDeleteModal({{ urun.id }}, '{{ urun.ad|escapejs }}')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="urunModal" tabindex="-1" aria-labelledby="urunModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="urunModalLabel">{% trans "Yeni Ürün" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="urunForm" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="ad" class="form-label">{% trans "Ürün Adı" %}</label>
+                            <input type="text" class="form-control" id="ad" name="ad" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fiyat" class="form-label">{% trans "Fiyat" %}</label>
+                            <input type="number" step="0.01" class="form-control" id="fiyat" name="fiyat" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fotograf" class="form-label">{% trans "Fotoğraf" %}</label>
+                            <input type="file" class="form-control" id="fotograf" name="fotograf" accept="image/*">
+                            <small class="text-muted">{% trans "Otomatik olarak WebP formatına dönüştürülecektir" %}</small>
+                        </div>
+                        <div id="current-image-container" style="display: none;">
+                            <label class="form-label">{% trans "Mevcut Fotoğraf" %}</label>
+                            <div>
+                                <img id="current-image" src="" alt="" style="max-width: 200px; border-radius: 5px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">{% trans "İptal" %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans "Kaydet" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">{% trans "Ürünü Sil" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="deleteForm" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <p id="deleteMessage"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">{% trans "İptal" %}</button>
+                        <button type="submit" class="btn btn-danger">{% trans "Sil" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{% static 'users/assets/extensions/simple-datatables/style.css' %}">
+    <link rel="stylesheet" href="{% static 'users/assets/compiled/css/table-datatable.css' %}">
+
+    <script>
+        const urunData = {
+            {% for urun in urunler %}
+                {{ urun.id }}: {
+                    fotograf_url: '{% if urun.fotograf %}{{ urun.fotograf.url }}{% endif %}'
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        function openCreateModal() {
+            document.getElementById('urunModalLabel').textContent = '{% trans "Yeni Ürün" %}';
+            document.getElementById('urunForm').action = '{% url "orders:urun_olustur" %}';
+            document.getElementById('ad').value = '';
+            document.getElementById('fiyat').value = '';
+            document.getElementById('fotograf').value = '';
+            document.getElementById('fotograf').required = true;
+            document.getElementById('current-image-container').style.display = 'none';
+        }
+
+        function openEditModal(id, ad, fiyat) {
+            document.getElementById('urunModalLabel').textContent = '{% trans "Ürünü Düzenle" %}';
+            const updateUrl = "{% url 'orders:urun_guncelle' pk=0 %}".replace('/0/', '/' + id + '/');
+            document.getElementById('urunForm').action = updateUrl;
+            document.getElementById('ad').value = ad;
+            document.getElementById('fiyat').value = fiyat;
+            document.getElementById('fotograf').value = '';
+            document.getElementById('fotograf').required = false;
+
+            if (urunData[id] && urunData[id].fotograf_url) {
+                document.getElementById('current-image').src = urunData[id].fotograf_url;
+                document.getElementById('current-image-container').style.display = 'block';
+            } else {
+                document.getElementById('current-image-container').style.display = 'none';
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('urunModal'));
+            modal.show();
+        }
+
+        function openDeleteModal(id, ad) {
+            document.getElementById('deleteMessage').textContent = '{% trans "Ürünü silmek istediğinizden emin misiniz?" %} ' + ad;
+            const deleteUrl = "{% url 'orders:urun_sil' pk=0 %}".replace('/0/', '/' + id + '/');
+            document.getElementById('deleteForm').action = deleteUrl;
+
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+    </script>
+
+    <script src="{% static 'users/assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+    <script src="{% static 'users/assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

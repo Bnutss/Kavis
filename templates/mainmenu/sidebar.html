@@ -62,10 +62,16 @@
                     </ul>
                 </li>
                 <li class="sidebar-title">{% trans "Araçlar" %}</li>
-                <li class="sidebar-item  ">
+                <li class="sidebar-item">
                     <a href="{% url 'directory:musteri_listesi' %}" class='sidebar-link'>
-                        <i class="bi bi-grid-1x2-fill"></i>
+                        <i class="bi bi-people-fill"></i>
                         <span>{% trans "Müşteriler" %}</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'orders:urun_listesi' %}" class='sidebar-link'>
+                        <i class="bi bi-box-seam"></i>
+                        <span>{% trans "Ürünler" %}</span>
                     </a>
                 </li>
             </ul>

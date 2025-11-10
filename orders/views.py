@@ -7,6 +7,32 @@ from .models import Siparis, Urun
 from directory.models import Musteri
 
 
+class UrunListView(LoginRequiredMixin, ListView):
+    model = Urun
+    template_name = "orders/urun_listesi.html"
+    context_object_name = "urunler"
+
+    def get_queryset(self):
+        return Urun.objects.all()
+
+
+class UrunCreateView(LoginRequiredMixin, CreateView):
+    model = Urun
+    fields = ["ad", "fiyat", "fotograf"]
+    success_url = reverse_lazy("orders:urun_listesi")
+
+
+class UrunUpdateView(LoginRequiredMixin, UpdateView):
+    model = Urun
+    fields = ["ad", "fiyat", "fotograf"]
+    success_url = reverse_lazy("orders:urun_listesi")
+
+
+class UrunDeleteView(LoginRequiredMixin, DeleteView):
+    model = Urun
+    success_url = reverse_lazy("orders:urun_listesi")
+
+
 class SiparisListView(LoginRequiredMixin, ListView):
     model = Siparis
     template_name = "orders/siparis_listesi.html"
@@ -82,16 +108,3 @@ class SiparisDurumGuncelleView(LoginRequiredMixin, View):
             return JsonResponse({'success': False, 'error': 'Sipariş bulunamadı'}, status=404)
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
-
-class UrunFiyatGetirView(LoginRequiredMixin, View):
-    def get(self, request, pk):
-        try:
-            urun = Urun.objects.get(pk=pk)
-            return JsonResponse({
-                'success': True,
-                'fiyat': float(urun.fiyat),
-                'ad': urun.ad
-            })
-        except Urun.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Ürün bulunamadı'}, status=404)
