@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.http import JsonResponse
 from django.views import View
-from .models import Siparis
+from .models import Siparis, Urun
 from directory.models import Musteri
 
 
@@ -13,18 +13,19 @@ class SiparisListView(LoginRequiredMixin, ListView):
     context_object_name = "siparisler"
 
     def get_queryset(self):
-        return Siparis.objects.select_related('musteri').all()
+        return Siparis.objects.select_related('musteri', 'urun').all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['musteriler'] = Musteri.objects.filter(aktif=True)
+        context['urunler'] = Urun.objects.all()
         return context
 
 
 class SiparisCreateView(LoginRequiredMixin, CreateView):
     model = Siparis
-    fields = ["siparis_no", "musteri", "urun_cinsi", "miktar", "fiyat", "siparis_tarihi", "uretici", "sevk_tarihi",
-              "durum", "not_bilgisi"]
+    fields = ["siparis_no", "musteri", "urun", "urun_cinsi", "miktar", "fiyat", "siparis_tarihi", "uretici",
+              "sevk_tarihi", "durum", "not_bilgisi"]
     success_url = reverse_lazy("orders:siparis_listesi")
 
     def form_invalid(self, form):
@@ -37,8 +38,8 @@ class SiparisCreateView(LoginRequiredMixin, CreateView):
 
 class SiparisUpdateView(LoginRequiredMixin, UpdateView):
     model = Siparis
-    fields = ["siparis_no", "musteri", "urun_cinsi", "miktar", "fiyat", "siparis_tarihi", "uretici", "sevk_tarihi",
-              "durum", "not_bilgisi"]
+    fields = ["siparis_no", "musteri", "urun", "urun_cinsi", "miktar", "fiyat", "siparis_tarihi", "uretici",
+              "sevk_tarihi", "durum", "not_bilgisi"]
     success_url = reverse_lazy("orders:siparis_listesi")
 
     def form_invalid(self, form):
@@ -81,3 +82,16 @@ class SiparisDurumGuncelleView(LoginRequiredMixin, View):
             return JsonResponse({'success': False, 'error': 'Sipariş bulunamadı'}, status=404)
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+class UrunFiyatGetirView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        try:
+            urun = Urun.objects.get(pk=pk)
+            return JsonResponse({
+                'success': True,
+                'fiyat': float(urun.fiyat),
+                'ad': urun.ad
+            })
+        except Urun.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Ürün bulunamadı'}, status=404)

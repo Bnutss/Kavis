@@ -48,7 +48,7 @@
                     <tr>
                         <th>{% trans "Sipariş No" %}</th>
                         <th>{% trans "Müşteri" %}</th>
-                        <th>{% trans "Ürün Cinsi" %}</th>
+                        <th>{% trans "Ürün" %}</th>
                         <th>{% trans "Miktar" %}</th>
                         <th>{% trans "Fiyat" %}</th>
                         <th>{% trans "Toplam" %}</th>
@@ -64,7 +64,7 @@
                         <tr>
                             <td><strong>{{ siparis.siparis_no }}</strong></td>
                             <td>{{ siparis.musteri.ad }}</td>
-                            <td>{{ siparis.urun_cinsi }}</td>
+                            <td>{{ siparis.get_urun_adi }}</td>
                             <td>{{ siparis.miktar }}</td>
                             <td>₺{{ siparis.fiyat|floatformat:2 }}</td>
                             <td><strong>₺{{ siparis.get_toplam_tutar|floatformat:2 }}</strong></td>
@@ -129,56 +129,70 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="urun_cinsi" class="form-label">{% trans "Ürün Cinsi" %}</label>
-                                <input type="text" class="form-control" id="urun_cinsi" name="urun_cinsi" required>
+                                <label for="urun" class="form-label">{% trans "Ürün Seçimi" %}</label>
+                                <select class="form-select" id="urun" name="urun">
+                                    <option value="">{% trans "Ürün Seçiniz (İsteğe Bağlı)" %}</option>
+                                    {% for urun in urunler %}
+                                        <option value="{{ urun.id }}" data-fiyat="{{ urun.fiyat }}">{{ urun.ad }} -
+                                            ₺{{ urun.fiyat }}</option>
+                                    {% endfor %}
+                                </select>
+                                <small class="text-muted">{% trans "veya aşağıya manuel yazın" %}</small>
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="urun_cinsi" class="form-label">{% trans "Ürün Cinsi (Manuel)" %}</label>
+                                <input type="text" class="form-control" id="urun_cinsi" name="urun_cinsi">
+                                <small class="text-muted">{% trans "Ürün seçilmediyse buraya yazın" %}</small>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="miktar" class="form-label">{% trans "Miktar" %}</label>
                                 <input type="number" class="form-control" id="miktar" name="miktar" required>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="fiyat" class="form-label">{% trans "Fiyat" %}</label>
                                 <input type="number" step="0.01" class="form-control" id="fiyat" name="fiyat" required>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="uretici" class="form-label">{% trans "Üretici" %}</label>
                                 <input type="text" class="form-control" id="uretici" name="uretici" required>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="siparis_tarihi" class="form-label">{% trans "Sipariş Tarihi" %}</label>
                                 <input type="date" class="form-control" id="siparis_tarihi" name="siparis_tarihi"
                                        required>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="sevk_tarihi" class="form-label">{% trans "Sevk Tarihi" %}</label>
                                 <input type="date" class="form-control" id="sevk_tarihi" name="sevk_tarihi">
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="durum" class="form-label">{% trans "Sipariş Durumu" %}</label>
-                            <select class="form-select" id="durum" name="durum" required>
-                                <option value="onay_bekliyor">{% trans "Onay Bekliyor" %}</option>
-                                <option value="onaylandi">{% trans "Onaylandı" %}</option>
-                                <option value="malzeme_satin_alma">{% trans "Malzeme Satın Alma" %}</option>
-                                <option value="uretimde">{% trans "Üretimde" %}</option>
-                                <option value="print_tkac">{% trans "Baskı/Tkacılık" %}</option>
-                                <option value="boya">{% trans "Boya" %}</option>
-                                <option value="aksesuar_montaji">{% trans "Aksesuar Montajı" %}</option>
-                                <option value="kalite_kontrol">{% trans "Kalite Kontrol" %}</option>
-                                <option value="paketleme">{% trans "Paketleme" %}</option>
-                                <option value="uretiliyor">{% trans "Üretiliyor" %}</option>
-                                <option value="hazir">{% trans "Hazır, Sevkiyat Bekliyor" %}</option>
-                                <option value="sevkiyatta">{% trans "Sevkiyatta" %}</option>
-                                <option value="teslime_gonderildi">{% trans "Teslime Gönderildi" %}</option>
-                                <option value="teslim_edildi">{% trans "Teslim Edildi" %}</option>
-                                <option value="tamamlandi">{% trans "Tamamlandı" %}</option>
-                                <option value="iade_pererabotka">{% trans "İade/Perak" %}</option>
-                                <option value="iptal">{% trans "İptal" %}</option>
-                            </select>
+                            <div class="col-md-6 mb-3">
+                                <label for="durum" class="form-label">{% trans "Sipariş Durumu" %}</label>
+                                <select class="form-select" id="durum" name="durum" required>
+                                    <option value="onay_bekliyor">{% trans "Onay Bekliyor" %}</option>
+                                    <option value="onaylandi">{% trans "Onaylandı" %}</option>
+                                    <option value="malzeme_satin_alma">{% trans "Malzeme Satın Alma" %}</option>
+                                    <option value="uretimde">{% trans "Üretimde" %}</option>
+                                    <option value="print_tkac">{% trans "Baskı/Tkacılık" %}</option>
+                                    <option value="boya">{% trans "Boya" %}</option>
+                                    <option value="aksesuar_montaji">{% trans "Aksesuar Montajı" %}</option>
+                                    <option value="kalite_kontrol">{% trans "Kalite Kontrol" %}</option>
+                                    <option value="paketleme">{% trans "Paketleme" %}</option>
+                                    <option value="uretiliyor">{% trans "Üretiliyor" %}</option>
+                                    <option value="hazir">{% trans "Hazır, Sevkiyat Bekliyor" %}</option>
+                                    <option value="sevkiyatta">{% trans "Sevkiyatta" %}</option>
+                                    <option value="teslime_gonderildi">{% trans "Teslime Gönderildi" %}</option>
+                                    <option value="teslim_edildi">{% trans "Teslim Edildi" %}</option>
+                                    <option value="tamamlandi">{% trans "Tamamlandı" %}</option>
+                                    <option value="iade_pererabotka">{% trans "İade/Perak" %}</option>
+                                    <option value="iptal">{% trans "İptal" %}</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="not_bilgisi" class="form-label">{% trans "Not" %}</label>
@@ -376,7 +390,9 @@
                     siparis_no: '{{ siparis.siparis_no|escapejs }}',
                     musteri_id: {{ siparis.musteri.id }},
                     musteri_ad: '{{ siparis.musteri.ad|escapejs }}',
+                    urun_id: {% if siparis.urun %}{{ siparis.urun.id }}{% else %}null{% endif %},
                     urun_cinsi: '{{ siparis.urun_cinsi|escapejs }}',
+                    urun_display: '{{ siparis.get_urun_adi|escapejs }}',
                     miktar: {{ siparis.miktar }},
                     fiyat: {{ siparis.fiyat }},
                     siparis_tarihi: '{{ siparis.siparis_tarihi|date:"Y-m-d" }}',
@@ -405,11 +421,22 @@
             return cookieValue;
         }
 
+        document.getElementById('urun').addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            const fiyat = selectedOption.getAttribute('data-fiyat');
+
+            if (fiyat && this.value) {
+                document.getElementById('fiyat').value = fiyat;
+                document.getElementById('urun_cinsi').value = '';
+            }
+        });
+
         function openCreateModal() {
             document.getElementById('siparisModalLabel').textContent = '{% trans "Yeni Sipariş" %}';
             document.getElementById('siparisForm').action = '{% url "orders:siparis_olustur" %}';
             document.getElementById('siparis_no').value = '';
             document.getElementById('musteri').value = '';
+            document.getElementById('urun').value = '';
             document.getElementById('urun_cinsi').value = '';
             document.getElementById('miktar').value = '';
             document.getElementById('fiyat').value = '';
@@ -431,6 +458,7 @@
             document.getElementById('siparisForm').action = '{% url "orders:siparis_guncelle" 0 %}'.replace('/0/', '/' + id + '/');
             document.getElementById('siparis_no').value = siparis.siparis_no;
             document.getElementById('musteri').value = siparis.musteri_id;
+            document.getElementById('urun').value = siparis.urun_id || '';
             document.getElementById('urun_cinsi').value = siparis.urun_cinsi;
             document.getElementById('miktar').value = siparis.miktar;
             document.getElementById('fiyat').value = siparis.fiyat;
@@ -453,7 +481,7 @@
 
             document.getElementById('detail_siparis_no').textContent = siparis.siparis_no;
             document.getElementById('detail_musteri').textContent = siparis.musteri_ad;
-            document.getElementById('detail_urun_cinsi').textContent = siparis.urun_cinsi;
+            document.getElementById('detail_urun_cinsi').textContent = siparis.urun_display;
             document.getElementById('detail_uretici').textContent = siparis.uretici;
             document.getElementById('detail_miktar').textContent = siparis.miktar;
             document.getElementById('detail_fiyat').textContent = '₺' + parseFloat(siparis.fiyat).toFixed(2);
