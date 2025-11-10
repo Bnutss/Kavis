@@ -6,11 +6,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('.login-form');
     const errorBox = document.getElementById('errorBox');
     const inputs = document.querySelectorAll('.input-group input');
+    const loaderProgress = document.querySelector('.loader-progress');
+    const loaderPercentage = document.querySelector('.loader-percentage');
 
-    setTimeout(() => {
-        loader.classList.add('hidden');
-        container.classList.add('visible');
-    }, 1500);
+    let progress = 0;
+    const loadingInterval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(loadingInterval);
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                container.classList.add('visible');
+            }, 300);
+        }
+        loaderProgress.style.width = progress + '%';
+        loaderPercentage.textContent = Math.floor(progress) + '%';
+    }, 100);
 
     langButtons.forEach(btn => {
         btn.addEventListener('click', function () {
@@ -65,7 +77,10 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             const currentLang = document.documentElement.lang || 'tr';
-            errorBox.textContent = errorMessages[currentLang] || errorMessages['tr'];
+            const errorText = errorBox.querySelector('.error-text');
+            if (errorText) {
+                errorText.textContent = errorMessages[currentLang] || errorMessages['tr'];
+            }
             errorBox.classList.add('active');
 
             inputs.forEach(input => {
@@ -88,18 +103,3 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.login-box').style.animation = 'fadeInUp 0.8s ease forwards';
     }, 1600);
 });
-
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-`;
-document.head.appendChild(style);
