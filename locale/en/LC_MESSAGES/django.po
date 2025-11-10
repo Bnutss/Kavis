@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: K-System 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-10 11:58+0300\n"
+"POT-Creation-Date: 2025-11-10 13:25+0300\n"
 "PO-Revision-Date: 2025-11-10 08:02+0300\n"
 "Last-Translator: K-System Team\n"
 "Language-Team: English\n"
@@ -52,6 +52,7 @@ msgstr "Name"
 
 #: directory/templates/directory/musteri_listesi.html:46
 #: directory/templates/directory/musteri_listesi.html:97
+#: templates/mainmenu/dashboard.html:69
 msgid "Ülke"
 msgstr "Country"
 
@@ -63,6 +64,7 @@ msgstr "Email"
 #: directory/templates/directory/musteri_listesi.html:48
 #: orders/templates/orders/siparis_listesi.html:56
 #: orders/templates/orders/siparis_listesi.html:255
+#: templates/mainmenu/dashboard.html:157
 msgid "Durum"
 msgstr "Status"
 
@@ -113,7 +115,7 @@ msgid "Müşteriyi Düzenle"
 msgstr "Edit Customer"
 
 #: directory/templates/directory/musteri_listesi.html:165
-msgid "Müşteriyi silmek istediğinizden emin misiniz?"
+msgid "Müşteriyi силер минеден Эмин мисин?"
 msgstr "Are you sure you want to delete this customer?"
 
 #: orders/templates/orders/siparis_listesi.html:15
@@ -135,12 +137,14 @@ msgstr "New Order"
 #: orders/templates/orders/siparis_listesi.html:47
 #: orders/templates/orders/siparis_listesi.html:142
 #: orders/templates/orders/siparis_listesi.html:243
+#: templates/mainmenu/dashboard.html:152
 msgid "Sipariş No"
 msgstr "Order Number"
 
 #: orders/templates/orders/siparis_listesi.html:48
 #: orders/templates/orders/siparis_listesi.html:146
 #: orders/templates/orders/siparis_listesi.html:249
+#: templates/mainmenu/dashboard.html:68
 msgid "Müşteri"
 msgstr "Customer"
 
@@ -153,33 +157,39 @@ msgstr "Product Type"
 #: orders/templates/orders/siparis_listesi.html:50
 #: orders/templates/orders/siparis_listesi.html:161
 #: orders/templates/orders/siparis_listesi.html:306
+#: templates/mainmenu/dashboard.html:154
 msgid "Miktar"
 msgstr "Quantity"
 
 #: orders/templates/orders/siparis_listesi.html:51
 #: orders/templates/orders/siparis_listesi.html:167
+#: templates/mainmenu/dashboard.html:155
 msgid "Fiyat"
 msgstr "Price"
 
 #: orders/templates/orders/siparis_listesi.html:52
+#: templates/mainmenu/dashboard.html:156
 msgid "Toplam"
 msgstr "Total"
 
 #: orders/templates/orders/siparis_listesi.html:53
 #: orders/templates/orders/siparis_listesi.html:177
 #: orders/templates/orders/siparis_listesi.html:341
+#: templates/mainmenu/dashboard.html:158
 msgid "Sipariş Tarihi"
 msgstr "Order Date"
 
 #: orders/templates/orders/siparis_listesi.html:54
 #: orders/templates/orders/siparis_listesi.html:171
 #: orders/templates/orders/siparis_listesi.html:287
+#: templates/mainmenu/dashboard.html:160
 msgid "Üretici"
 msgstr "Manufacturer"
 
 #: orders/templates/orders/siparis_listesi.html:55
 #: orders/templates/orders/siparis_listesi.html:182
 #: orders/templates/orders/siparis_listesi.html:352
+#: templates/mainmenu/dashboard.html:159
 msgid "Sevk Tarihi"
 msgstr "Shipment Date"
 
@@ -292,6 +302,7 @@ msgid "Not"
 msgstr "Note"
 
 #: orders/templates/orders/siparis_listesi.html:228
+#: templates/mainmenu/dashboard.html:146
 msgid "Sipariş Detayları"
 msgstr "Order Details"
 
@@ -312,6 +323,7 @@ msgid "Birim Fiyat"
 msgstr "Unit Price"
 
 #: orders/templates/orders/siparis_listesi.html:320
+#: templates/mainmenu/dashboard.html:74
 msgid "Toplam Tutar"
 msgstr "Total Amount"
 
@@ -355,27 +367,47 @@ msgstr "by"
 msgid "Sipariş takip sistemine hoş geldiniz"
 msgstr "Welcome to the order tracking system"
 
-#: templates/mainmenu/dashboard.html:62
-msgid "Önemli Durumlar"
-msgstr "Important Statuses"
+#: templates/mainmenu/dashboard.html:59
+msgid "Müşteri Bazlı İstatistikler"
+msgstr "Customer Based Statistics"
 
-#: templates/mainmenu/dashboard.html:96
-msgid "Son Siparişler"
-msgstr "Recent Orders"
+#: templates/mainmenu/dashboard.html:70
+msgid "Toplam Sipariş"
+msgstr "Total Orders"
 
-#: templates/mainmenu/dashboard.html:124
-msgid "Henüz sipariş bulunmuyor"
-msgstr "No orders found yet"
+#: templates/mainmenu/dashboard.html:71
+msgid "Bekleyen"
+msgstr "Pending"
 
-#: templates/mainmenu/dashboard.html:139
-msgid "Tüm Sipariş Durumları"
-msgstr "All Order Statuses"
+#: templates/mainmenu/dashboard.html:72
+msgid "Tamamlanan"
+msgstr "Completed"
 
-#: templates/mainmenu/dashboard.html:193
+#: templates/mainmenu/dashboard.html:73
+msgid "Tamamlanma %"
+msgstr "Completion %"
+
+#: templates/mainmenu/dashboard.html:75
+msgid "Tamamlanan Tutar"
+msgstr "Completed Amount"
+
+#: templates/mainmenu/dashboard.html:76
+msgid "Son Sipariş"
+msgstr "Last Order"
+
+#: templates/mainmenu/dashboard.html:153
+msgid "Ürün"
+msgstr "Product"
+
+#: templates/mainmenu/dashboard.html:209
+msgid "Henüz müşteri verisi bulunmuyor"
+msgstr "No customer data available yet"
+
+#: templates/mainmenu/dashboard.html:235
 msgid "Son giriş: Şimdi"
 msgstr "Last login: Now"
 
-#: templates/mainmenu/dashboard.html:201
+#: templates/mainmenu/dashboard.html:243
 msgid "Çıkış Yap"
 msgstr "Logout"
 
@@ -431,7 +463,6 @@ msgstr "Enter System"
 msgid "© 2025 K-System. Tüm hakları saklıdır."
 msgstr "© 2025 K-System. All rights reserved."
 
-# Dashboard specific translations
 msgid "Toplam Müşteri"
 msgstr "Total Customers"
 
@@ -443,15 +474,3 @@ msgstr "Completed Orders"
 
 msgid "Toplam Hasılat"
 msgstr "Total Revenue"
-
-msgid "Sipariş"
-msgstr "Order"
-
-msgid "Toplam Değer"
-msgstr "Total Value"
-
-msgid "Rapor İndir"
-msgstr "Download Report"
-
-msgid "Tüm siparişlerin mevcut durum dağılımı"
-msgstr "Current status distribution of all orders"
