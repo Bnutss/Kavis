@@ -6,6 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
+from django.db.models import Sum
+from directory.models import Musteri
+from orders.models import Siparis
 
 
 class LoginView(View):
@@ -44,3 +47,43 @@ class LogoutView(View):
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'mainmenu/base.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        toplam_musteri = Musteri.objects.count()
+        bekleyen_siparis = Siparis.objects.exclude(durum='tamamlandi').count()
+        tamamlanan_siparis = Siparis.objects.filter(durum='tamamlandi').count()
+        toplam_hasilat_data = Siparis.objects.filter(durum='tamamlandi').aggregate(
+            total=Sum('fiyat', field='fiyat * miktar')
+        )['total']
+
+        toplam_hasilat = toplam_hasilat_data if toplam_hasilat_data is not None else 0
+
+        context['dashboard_stats'] = [
+            {
+                'title': 'Toplam Müşteri',
+                'value': toplam_musteri,
+                'icon_class': 'iconly-boldProfile',
+                'bg_color': 'blue'
+            },
+            {
+                'title': 'Bekleyen Sipariş',
+                'value': bekleyen_siparis,
+                'icon_class': 'iconly-boldTime-Square',
+                'bg_color': 'orange'
+            },
+            {
+                'title': 'Tamamlanan Sipariş',
+                'value': tamamlanan_siparis,
+                'icon_class': 'iconly-boldTick-Square',
+                'bg_color': 'green'
+            },
+            {
+                'title': 'Toplam Hasılat',
+                'value': toplam_hasilat,
+                'icon_class': 'iconly-boldChart',
+                'bg_color': 'purple',
+                'is_currency': True
+            }
+        ]
+        return context

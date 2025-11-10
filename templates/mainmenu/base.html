@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'users/assets/compiled/css/app.css' %}">
     <link rel="stylesheet" href="{% static 'users/assets/compiled/css/app-dark.css' %}">
     <link rel="stylesheet" href="{% static 'users/assets/compiled/css/iconly.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 <script src="{% static 'users/assets/static/js/initTheme.js' %}"></script>
@@ -26,79 +27,37 @@
                 <h3>{% trans "Dashboard" %}</h3>
             </div>
         {% endblock %}
+
         {% block main_content %}
             <div class="page-content">
                 <section class="row">
                     <div class="col-12 col-lg-9">
                         <div class="row">
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
-                                                <div class="stats-icon purple mb-2">
-                                                    <i class="iconly-boldShow"></i>
+                            {% for stat in dashboard_stats %}
+                                <div class="col-6 col-lg-3 col-md-6">
+                                    <div class="card">
+                                        <div class="card-body px-4 py-4-5">
+                                            <div class="row">
+                                                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
+                                                    <div class="stats-icon {{ stat.bg_color }} mb-2">
+                                                        <i class="{{ stat.icon_class }}"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">{% trans "Profil Görüntülemeleri" %}</h6>
-                                                <h6 class="font-extrabold mb-0">112.000</h6>
+                                                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                                                    <h6 class="text-muted font-semibold">{% trans stat.title %}</h6>
+                                                    <h6 class="font-extrabold mb-0">
+                                                        {% if stat.is_currency %}
+                                                            ₺ {{ stat.value|floatformat:2|default:"0.00" }}
+                                                        {% else %}
+                                                            {{ stat.value }}
+                                                        {% endif %}
+                                                    </h6>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
-                                                <div class="stats-icon blue mb-2">
-                                                    <i class="iconly-boldProfile"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">{% trans "Takipçiler" %}</h6>
-                                                <h6 class="font-extrabold mb-0">183.000</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
-                                                <div class="stats-icon green mb-2">
-                                                    <i class="iconly-boldAdd-User"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">{% trans "Takip Edilenler" %}</h6>
-                                                <h6 class="font-extrabold mb-0">80.000</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
-                                                <div class="stats-icon red mb-2">
-                                                    <i class="iconly-boldBookmark"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">{% trans "Kaydedilen Gönderi" %}</h6>
-                                                <h6 class="font-extrabold mb-0">112</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="col-12 col-lg-3">
@@ -127,8 +86,10 @@
                 </section>
             </div>
         {% endblock %}
+
         {% block content %}
         {% endblock %}
+
         <footer>
             <div class="footer clearfix mb-0 text-muted">
                 <div class="float-start">
@@ -146,7 +107,6 @@
 <script src="{% static 'users/assets/static/js/components/dark.js' %}"></script>
 <script src="{% static 'users/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
 <script src="{% static 'users/assets/compiled/js/app.js' %}"></script>
-<script src="{% static 'users/assets/extensions/apexcharts/apexcharts.min.js' %}"></script>
-<script src="{% static 'users/assets/static/js/pages/dashboard.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>

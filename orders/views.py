@@ -1,3 +1,79 @@
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.http import JsonResponse
+from django.views import View
+from .models import Siparis
+from directory.models import Musteri
 
-# Create your views here.
+
+class SiparisListView(LoginRequiredMixin, ListView):
+    model = Siparis
+    template_name = "orders/siparis_listesi.html"
+    context_object_name = "siparisler"
+
+    def get_queryset(self):
+        return Siparis.objects.select_related('musteri').all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['musteriler'] = Musteri.objects.filter(aktif=True)
+        return context
+
+
+class SiparisCreateView(CreateView):
+    model = Siparis
+    fields = ["musteri", "miktar", "fiyat", "siparis_tarihi", "uretici", "sevk_tarihi", "durum", "not_bilgisi"]
+    success_url = reverse_lazy("orders:siparis_listesi")
+
+    def form_invalid(self, form):
+        return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'success': True, 'id': self.object.id})
+
+
+class SiparisUpdateView(UpdateView):
+    model = Siparis
+    fields = ["musteri", "miktar", "fiyat", "siparis_tarihi", "uretici", "sevk_tarihi", "durum", "not_bilgisi"]
+    success_url = reverse_lazy("orders:siparis_listesi")
+
+    def form_invalid(self, form):
+        return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'success': True, 'id': self.object.id})
+
+
+class SiparisDeleteView(DeleteView):
+    model = Siparis
+    success_url = reverse_lazy("orders:siparis_listesi")
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return JsonResponse({'success': True})
+
+
+class SiparisDurumGuncelleView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        try:
+            siparis = Siparis.objects.get(pk=pk)
+            yeni_durum = request.POST.get('durum')
+
+            if not yeni_durum:
+                return JsonResponse({'success': False, 'error': 'Durum parametresi eksik'}, status=400)
+
+            durum_values = [choice[0] for choice in Siparis.DURUM_CHOICES]
+            if yeni_durum in durum_values:
+                siparis.durum = yeni_durum
+                siparis.save()
+                return JsonResponse({'success': True})
+
+            return JsonResponse({'success': False, 'error': 'Geçersiz durum'}, status=400)
+        except Siparis.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Sipariş bulunamadı'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)

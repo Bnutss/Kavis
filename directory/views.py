@@ -14,14 +14,17 @@ class MusteriCreateView(LoginRequiredMixin, CreateView):
     model = Musteri
     fields = ["ad", "ulke", "eposta", "aktif"]
     success_url = reverse_lazy("directory:musteri_listesi")
+    template_name = "directory/musteri_listesi.html"
 
 
 class MusteriUpdateView(LoginRequiredMixin, UpdateView):
     model = Musteri
     fields = ["ad", "ulke", "eposta", "aktif"]
     success_url = reverse_lazy("directory:musteri_listesi")
+    template_name = "directory/musteri_listesi.html"
 
 
 class MusteriDeleteView(LoginRequiredMixin, DeleteView):
     model = Musteri
     success_url = reverse_lazy("directory:musteri_listesi")
+    template_name = "directory/musteri_listesi.html"

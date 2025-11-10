@@ -150,7 +150,8 @@
 
         function openEditModal(id, ad, ulke, eposta, aktif) {
             document.getElementById('musteriModalLabel').textContent = '{% trans "Müşteriyi Düzenle" %}';
-            document.getElementById('musteriForm').action = '/directory/musteri/' + id + '/guncelle/';
+            const updateUrl = "{% url 'directory:musteri_guncelle' pk=0 %}".replace('/0/', '/' + id + '/');
+            document.getElementById('musteriForm').action = updateUrl;
             document.getElementById('ad').value = ad;
             document.getElementById('ulke').value = ulke;
             document.getElementById('eposta').value = eposta;
@@ -161,8 +162,9 @@
         }
 
         function openDeleteModal(id, ad) {
-            document.getElementById('deleteMessage').textContent = '{% trans "Müşteriyi silmek istediğinizden emin misiniz?" %} ' + ad;
-            document.getElementById('deleteForm').action = '/directory/musteri/' + id + '/sil/';
+            document.getElementById('deleteMessage').textContent = '{% trans "Müşteriyi силер минеден Эмин мисин?" %} ' + ad;
+            const deleteUrl = "{% url 'directory:musteri_sil' pk=0 %}".replace('/0/', '/' + id + '/');
+            document.getElementById('deleteForm').action = deleteUrl;
 
             const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
             modal.show();

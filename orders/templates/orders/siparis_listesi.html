@@ -1,0 +1,612 @@
+{% extends 'mainmenu/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <header class="mb-3">
+        <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+        </a>
+    </header>
+    <div class="page-heading">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-12 col-md-6 order-md-1 order-last">
+                    <h3>{% trans "Siparişler" %}</h3>
+                </div>
+                <div class="col-12 col-md-6 order-md-2 order-first">
+                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a
+                                    href="{% url 'users:dashboard' %}">{% trans "Dashboard" %}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{% trans "Siparişler" %}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="row">
+            <div class="col-12 mb-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#siparisModal"
+                        onclick="openCreateModal()">
+                    <i class="bi bi-plus-circle"></i> {% trans "Yeni Sipariş" %}
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0 text-white">{% trans "Üretiliyor" %}</h5>
+                    </div>
+                    <div class="card-body p-2 status-column" id="uretiliyor" data-status="uretiliyor"
+                         ondrop="drop(event)"
+                         ondragover="allowDrop(event)">
+                        {% for siparis in siparisler %}
+                            {% if siparis.durum == 'uretiliyor' %}
+                                <div class="card mb-2 siparis-card" draggable="true" ondragstart="drag(event)"
+                                     id="siparis-{{ siparis.id }}" data-id="{{ siparis.id }}"
+                                     data-siparis='{{ siparis|safe }}'>
+                                    <div class="card-body p-3">
+                                        <h6 class="mb-1"><strong>{{ siparis.musteri.ad }}</strong></h6>
+                                        <p class="mb-1 small">{% trans "Miktar" %}: {{ siparis.miktar }}</p>
+                                        <p class="mb-1 small">{% trans "Üretici" %}: {{ siparis.uretici }}</p>
+                                        <p class="mb-2 small">{% trans "Tarih" %}: {{ siparis.siparis_tarihi|date:"d.m.Y" }}</p>
+                                        <div class="d-flex gap-1">
+                                            <button class="btn btn-sm btn-info"
+                                                    onclick="openDetailModalById({{ siparis.id }})">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-warning"
+                                                    onclick="openEditModalById({{ siparis.id }})">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger"
+                                                    onclick="openDeleteModal({{ siparis.id }}, '{{ siparis.musteri.ad|escapejs }}')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-success">
+                        <h5 class="mb-0 text-white">{% trans "Hazır, Sevkiyat Bekliyor" %}</h5>
+                    </div>
+                    <div class="card-body p-2 status-column" id="hazir" data-status="hazir" ondrop="drop(event)"
+                         ondragover="allowDrop(event)">
+                        {% for siparis in siparisler %}
+                            {% if siparis.durum == 'hazir' %}
+                                <div class="card mb-2 siparis-card" draggable="true" ondragstart="drag(event)"
+                                     id="siparis-{{ siparis.id }}" data-id="{{ siparis.id }}">
+                                    <div class="card-body p-3">
+                                        <h6 class="mb-1"><strong>{{ siparis.musteri.ad }}</strong></h6>
+                                        <p class="mb-1 small">{% trans "Miktar" %}: {{ siparis.miktar }}</p>
+                                        <p class="mb-1 small">{% trans "Üretici" %}: {{ siparis.uretici }}</p>
+                                        <p class="mb-2 small">{% trans "Tarih" %}: {{ siparis.siparis_tarihi|date:"d.m.Y" }}</p>
+                                        <div class="d-flex gap-1">
+                                            <button class="btn btn-sm btn-info"
+                                                    onclick="openDetailModalById({{ siparis.id }})">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-warning"
+                                                    onclick="openEditModalById({{ siparis.id }})">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger"
+                                                    onclick="openDeleteModal({{ siparis.id }}, '{{ siparis.musteri.ad|escapejs }}')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-primary">
+                        <h5 class="mb-0 text-white">{% trans "Sevkiyatta" %}</h5>
+                    </div>
+                    <div class="card-body p-2 status-column" id="sevkiyatta" data-status="sevkiyatta"
+                         ondrop="drop(event)"
+                         ondragover="allowDrop(event)">
+                        {% for siparis in siparisler %}
+                            {% if siparis.durum == 'sevkiyatta' %}
+                                <div class="card mb-2 siparis-card" draggable="true" ondragstart="drag(event)"
+                                     id="siparis-{{ siparis.id }}" data-id="{{ siparis.id }}">
+                                    <div class="card-body p-3">
+                                        <h6 class="mb-1"><strong>{{ siparis.musteri.ad }}</strong></h6>
+                                        <p class="mb-1 small">{% trans "Miktar" %}: {{ siparis.miktar }}</p>
+                                        <p class="mb-1 small">{% trans "Üretici" %}: {{ siparis.uretici }}</p>
+                                        <p class="mb-2 small">{% trans "Tarih" %}: {{ siparis.siparis_tarihi|date:"d.m.Y" }}</p>
+                                        <div class="d-flex gap-1">
+                                            <button class="btn btn-sm btn-info"
+                                                    onclick="openDetailModalById({{ siparis.id }})">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-warning"
+                                                    onclick="openEditModalById({{ siparis.id }})">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger"
+                                                    onclick="openDeleteModal({{ siparis.id }}, '{{ siparis.musteri.ad|escapejs }}')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header bg-secondary">
+                        <h5 class="mb-0 text-white">{% trans "Tamamlandı" %}</h5>
+                    </div>
+                    <div class="card-body p-2 status-column" id="tamamlandi" data-status="tamamlandi"
+                         ondrop="drop(event)"
+                         ondragover="allowDrop(event)">
+                        {% for siparis in siparisler %}
+                            {% if siparis.durum == 'tamamlandi' %}
+                                <div class="card mb-2 siparis-card" draggable="true" ondragstart="drag(event)"
+                                     id="siparis-{{ siparis.id }}" data-id="{{ siparis.id }}">
+                                    <div class="card-body p-3">
+                                        <h6 class="mb-1"><strong>{{ siparis.musteri.ad }}</strong></h6>
+                                        <p class="mb-1 small">{% trans "Miktar" %}: {{ siparis.miktar }}</p>
+                                        <p class="mb-1 small">{% trans "Üretici" %}: {{ siparis.uretici }}</p>
+                                        <p class="mb-2 small">{% trans "Tarih" %}: {{ siparis.siparis_tarihi|date:"d.m.Y" }}</p>
+                                        <div class="d-flex gap-1">
+                                            <button class="btn btn-sm btn-info"
+                                                    onclick="openDetailModalById({{ siparis.id }})">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-warning"
+                                                    onclick="openEditModalById({{ siparis.id }})">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger"
+                                                    onclick="openDeleteModal({{ siparis.id }}, '{{ siparis.musteri.ad|escapejs }}')">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="siparisModal" tabindex="-1" aria-labelledby="siparisModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="siparisModalLabel">{% trans "Yeni Sipariş" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="siparisForm" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="musteri" class="form-label">{% trans "Müşteri" %}</label>
+                                <select class="form-select" id="musteri" name="musteri" required>
+                                    <option value="">{% trans "Seçiniz" %}</option>
+                                    {% for musteri in musteriler %}
+                                        <option value="{{ musteri.id }}">{{ musteri.ad }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="miktar" class="form-label">{% trans "Miktar" %}</label>
+                                <input type="number" class="form-control" id="miktar" name="miktar" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="fiyat" class="form-label">{% trans "Fiyat" %}</label>
+                                <input type="number" step="0.01" class="form-control" id="fiyat" name="fiyat" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="uretici" class="form-label">{% trans "Üretici" %}</label>
+                                <input type="text" class="form-control" id="uretici" name="uretici" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="siparis_tarihi" class="form-label">{% trans "Sipariş Tarihi" %}</label>
+                                <input type="date" class="form-control" id="siparis_tarihi" name="siparis_tarihi"
+                                       required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="sevk_tarihi" class="form-label">{% trans "Sevk Tarihi" %}</label>
+                                <input type="date" class="form-control" id="sevk_tarihi" name="sevk_tarihi">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="durum" class="form-label">{% trans "Sipariş Durumu" %}</label>
+                            <select class="form-select" id="durum" name="durum" required>
+                                <option value="uretiliyor">{% trans "Üretiliyor" %}</option>
+                                <option value="hazir">{% trans "Hazır, Sevkiyat Bekliyor" %}</option>
+                                <option value="sevkiyatta">{% trans "Sevkiyatta" %}</option>
+                                <option value="tamamlandi">{% trans "Tamamlandı" %}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="not_bilgisi" class="form-label">{% trans "Not" %}</label>
+                            <textarea class="form-control" id="not_bilgisi" name="not_bilgisi" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">{% trans "İptal" %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans "Kaydet" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">{% trans "Sipariş Detayları" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>{% trans "Müşteri" %}:</strong>
+                            <p id="detail_musteri"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>{% trans "Üretici" %}:</strong>
+                            <p id="detail_uretici"></p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>{% trans "Miktar" %}:</strong>
+                            <p id="detail_miktar"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>{% trans "Fiyat" %}:</strong>
+                            <p id="detail_fiyat"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>{% trans "Toplam Tutar" %}:</strong>
+                            <p id="detail_toplam"></p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>{% trans "Sipariş Tarihi" %}:</strong>
+                            <p id="detail_siparis_tarihi"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>{% trans "Sevk Tarihi" %}:</strong>
+                            <p id="detail_sevk_tarihi"></p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong>{% trans "Durum" %}:</strong>
+                            <p id="detail_durum"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong>{% trans "Not" %}:</strong>
+                            <p id="detail_not"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Kapat" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">{% trans "Siparişi Sil" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="deleteMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "İptal" %}</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">{% trans "Sil" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .status-column {
+            min-height: 500px;
+            background-color: #f8f9fa;
+        }
+
+        .siparis-card {
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+
+        .siparis-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-column.drag-over {
+            background-color: #e9ecef;
+            border: 2px dashed #6c757d;
+        }
+    </style>
+
+    <script>
+        let deleteId = null;
+        const siparisData = {
+            {% for siparis in siparisler %}
+                {{ siparis.id }}: {
+                    id: {{ siparis.id }},
+                    musteri_id: {{ siparis.musteri.id }},
+                    musteri_ad: '{{ siparis.musteri.ad|escapejs }}',
+                    miktar: {{ siparis.miktar }},
+                    fiyat: {{ siparis.fiyat }},
+                    siparis_tarihi: '{{ siparis.siparis_tarihi|date:"Y-m-d" }}',
+                    siparis_tarihi_display: '{{ siparis.siparis_tarihi|date:"d.m.Y" }}',
+                    uretici: '{{ siparis.uretici|escapejs }}',
+                    sevk_tarihi: '{% if siparis.sevk_tarihi %}{{ siparis.sevk_tarihi|date:"Y-m-d" }}{% endif %}',
+                    sevk_tarihi_display: '{% if siparis.sevk_tarihi %}{{ siparis.sevk_tarihi|date:"d.m.Y" }}{% else %}-{% endif %}',
+                    durum: '{{ siparis.durum }}',
+                    not_bilgisi: '{{ siparis.not_bilgisi|escapejs }}'
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drag-over');
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.dataset.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+
+            const siparisId = ev.dataTransfer.getData("text");
+            const yeniDurum = ev.currentTarget.dataset.status;
+            const siparisElement = document.getElementById('siparis-' + siparisId);
+
+            if (!siparisId || !yeniDurum || !siparisElement) {
+                console.error('Geçersiz veri');
+                return;
+            }
+
+            ev.currentTarget.appendChild(siparisElement);
+
+            const csrftoken = getCookie('csrftoken');
+            const currentPath = window.location.pathname;
+            const langPrefix = currentPath.split('/')[1];
+            const url = '/' + langPrefix + '/orders/siparis/' + siparisId + '/durum-guncelle/';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'durum=' + encodeURIComponent(yeniDurum)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.success) {
+                        alert('Durum güncellenirken bir hata oluştu!');
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Bir hata oluştu: ' + error.message);
+                    location.reload();
+                });
+        }
+
+        document.querySelectorAll('.status-column').forEach(column => {
+            column.addEventListener('dragleave', function (e) {
+                e.currentTarget.classList.remove('drag-over');
+            });
+        });
+
+        function openCreateModal() {
+            document.getElementById('siparisModalLabel').textContent = '{% trans "Yeni Sipariş" %}';
+            document.getElementById('siparisForm').action = '{% url "orders:siparis_olustur" %}';
+            document.getElementById('musteri').value = '';
+            document.getElementById('miktar').value = '';
+            document.getElementById('fiyat').value = '';
+            document.getElementById('uretici').value = '';
+            document.getElementById('siparis_tarihi').value = '';
+            document.getElementById('sevk_tarihi').value = '';
+            document.getElementById('durum').value = 'uretiliyor';
+            document.getElementById('not_bilgisi').value = '';
+        }
+
+        function openEditModalById(id) {
+            const siparis = siparisData[id];
+            if (!siparis) {
+                console.error('Sipariş bulunamadı:', id);
+                return;
+            }
+
+            document.getElementById('siparisModalLabel').textContent = '{% trans "Siparişi Düzenle" %}';
+            document.getElementById('siparisForm').action = '{% url "orders:siparis_guncelle" 0 %}'.replace('/0/', '/' + id + '/');
+            document.getElementById('musteri').value = siparis.musteri_id;
+            document.getElementById('miktar').value = siparis.miktar;
+            document.getElementById('fiyat').value = siparis.fiyat;
+            document.getElementById('uretici').value = siparis.uretici;
+            document.getElementById('siparis_tarihi').value = siparis.siparis_tarihi;
+            document.getElementById('sevk_tarihi').value = siparis.sevk_tarihi;
+            document.getElementById('durum').value = siparis.durum;
+            document.getElementById('not_bilgisi').value = siparis.not_bilgisi;
+
+            const modal = new bootstrap.Modal(document.getElementById('siparisModal'));
+            modal.show();
+        }
+
+        function openDetailModalById(id) {
+            const siparis = siparisData[id];
+            if (!siparis) {
+                console.error('Sipariş bulunamadı:', id);
+                return;
+            }
+
+            document.getElementById('detail_musteri').textContent = siparis.musteri_ad;
+            document.getElementById('detail_uretici').textContent = siparis.uretici;
+            document.getElementById('detail_miktar').textContent = siparis.miktar;
+            document.getElementById('detail_fiyat').textContent = siparis.fiyat + ' ₺';
+            document.getElementById('detail_toplam').textContent = (parseFloat(siparis.miktar) * parseFloat(siparis.fiyat)).toFixed(2) + ' ₺';
+            document.getElementById('detail_siparis_tarihi').textContent = siparis.siparis_tarihi_display;
+            document.getElementById('detail_sevk_tarihi').textContent = siparis.sevk_tarihi_display;
+
+            let durumText = '';
+            let durumBadge = '';
+            if (siparis.durum === 'hazir') {
+                durumText = '{% trans "Hazır, Sevkiyat Bekliyor" %}';
+                durumBadge = '<span class="badge bg-success">' + durumText + '</span>';
+            } else if (siparis.durum === 'sevkiyatta') {
+                durumText = '{% trans "Sevkiyatta" %}';
+                durumBadge = '<span class="badge bg-primary">' + durumText + '</span>';
+            } else if (siparis.durum === 'tamamlandi') {
+                durumText = '{% trans "Tamamlandı" %}';
+                durumBadge = '<span class="badge bg-secondary">' + durumText + '</span>';
+            } else if (siparis.durum === 'uretiliyor') {
+                durumText = '{% trans "Üretiliyor" %}';
+                durumBadge = '<span class="badge bg-warning">' + durumText + '</span>';
+            }
+            document.getElementById('detail_durum').innerHTML = durumBadge;
+            document.getElementById('detail_not').textContent = siparis.not_bilgisi || '-';
+
+            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
+            modal.show();
+        }
+
+        function openDeleteModal(id, musteri) {
+            deleteId = id;
+            document.getElementById('deleteMessage').textContent = '{% trans "Siparişi silmek istediğinizden emin misiniz?" %} (' + musteri + ')';
+
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+
+        function confirmDelete() {
+            if (!deleteId) return;
+
+            const csrftoken = getCookie('csrftoken');
+
+            fetch('{% url "orders:siparis_sil" 0 %}'.replace('/0/', '/' + deleteId + '/'), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                        modal.hide();
+                        document.getElementById('siparis-' + deleteId).remove();
+                        deleteId = null;
+                    } else {
+                        alert('Sipariş silinirken bir hata oluştu!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Bir hata oluştu!');
+                });
+        }
+
+        document.getElementById('siparisForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const csrftoken = getCookie('csrftoken');
+
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('siparisModal'));
+                        modal.hide();
+                        location.reload();
+                    } else {
+                        let errorMsg = 'Bir hata oluştu:\n';
+                        for (let field in data.errors) {
+                            errorMsg += field + ': ' + data.errors[field].join(', ') + '\n';
+                        }
+                        alert(errorMsg);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Bir hata oluştu!');
+                });
+        });
+    </script>
+{% endblock %}
