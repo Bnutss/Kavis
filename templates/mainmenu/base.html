@@ -23,68 +23,9 @@
                     <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
-            <div class="page-heading">
-                <h3>{% trans "Dashboard" %}</h3>
-            </div>
         {% endblock %}
 
         {% block main_content %}
-            <div class="page-content">
-                <section class="row">
-                    <div class="col-12 col-lg-9">
-                        <div class="row">
-                            {% for stat in dashboard_stats %}
-                                <div class="col-6 col-lg-3 col-md-6">
-                                    <div class="card">
-                                        <div class="card-body px-4 py-4-5">
-                                            <div class="row">
-                                                <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
-                                                    <div class="stats-icon {{ stat.bg_color }} mb-2">
-                                                        <i class="{{ stat.icon_class }}"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                    <h6 class="text-muted font-semibold">{% trans stat.title %}</h6>
-                                                    <h6 class="font-extrabold mb-0">
-                                                        {% if stat.is_currency %}
-                                                            ₺ {{ stat.value|floatformat:2|default:"0.00" }}
-                                                        {% else %}
-                                                            {{ stat.value }}
-                                                        {% endif %}
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-3">
-                        <div class="card">
-                            <div class="card-body py-4 px-4">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="avatar avatar-xl">
-                                        <img src="{% static 'users/assets/compiled/jpg/1.jpg' %}" alt="Face 1">
-                                    </div>
-                                    <div class="ms-3 name">
-                                        <h5 class="font-bold mb-0">{{ user.first_name }} {{ user.last_name }}</h5>
-                                        <h6 class="text-muted mb-0">@{{ user.username }}</h6>
-                                    </div>
-                                </div>
-                                <div class="d-grid">
-                                    <form method="post" action="{% url 'users:logout' %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger w-100">
-                                            <i class="bi bi-box-arrow-right"></i> {% trans "Çıkış Yap" %}
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
         {% endblock %}
 
         {% block content %}

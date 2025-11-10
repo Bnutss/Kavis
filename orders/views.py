@@ -21,9 +21,10 @@ class SiparisListView(LoginRequiredMixin, ListView):
         return context
 
 
-class SiparisCreateView(CreateView):
+class SiparisCreateView(LoginRequiredMixin, CreateView):
     model = Siparis
-    fields = ["musteri", "miktar", "fiyat", "siparis_tarihi", "uretici", "sevk_tarihi", "durum", "not_bilgisi"]
+    fields = ["siparis_no", "musteri", "urun_cinsi", "miktar", "fiyat", "siparis_tarihi", "uretici", "sevk_tarihi",
+              "durum", "not_bilgisi"]
     success_url = reverse_lazy("orders:siparis_listesi")
 
     def form_invalid(self, form):
@@ -34,9 +35,10 @@ class SiparisCreateView(CreateView):
         return JsonResponse({'success': True, 'id': self.object.id})
 
 
-class SiparisUpdateView(UpdateView):
+class SiparisUpdateView(LoginRequiredMixin, UpdateView):
     model = Siparis
-    fields = ["musteri", "miktar", "fiyat", "siparis_tarihi", "uretici", "sevk_tarihi", "durum", "not_bilgisi"]
+    fields = ["siparis_no", "musteri", "urun_cinsi", "miktar", "fiyat", "siparis_tarihi", "uretici", "sevk_tarihi",
+              "durum", "not_bilgisi"]
     success_url = reverse_lazy("orders:siparis_listesi")
 
     def form_invalid(self, form):
@@ -47,14 +49,16 @@ class SiparisUpdateView(UpdateView):
         return JsonResponse({'success': True, 'id': self.object.id})
 
 
-class SiparisDeleteView(DeleteView):
-    model = Siparis
-    success_url = reverse_lazy("orders:siparis_listesi")
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()
-        return JsonResponse({'success': True})
+class SiparisDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        try:
+            siparis = Siparis.objects.get(pk=pk)
+            siparis.delete()
+            return JsonResponse({'success': True})
+        except Siparis.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Sipariş bulunamadı'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
 class SiparisDurumGuncelleView(LoginRequiredMixin, View):

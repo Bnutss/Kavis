@@ -2,7 +2,298 @@
 {% load static %}
 {% load i18n %}
 
-{% block content %}
-    <script src="{% static 'users/assets/extensions/apexcharts/apexcharts.min.js' %}"></script>
-    <script src="{% static 'users/assets/static/js/pages/dashboard.js' %}"></script>
+{% block breadcrumbs %}
+    <div class="page-heading">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h3>{% trans "Dashboard" %}</h3>
+                <p class="text-muted mb-0">{% trans "Sipariş takip sistemine hoş geldiniz" %}</p>
+            </div>
+            <div class="btn-group">
+                <span class="badge bg-light text-dark">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    {{ current_date }}
+                </span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block main_content %}
+    <div class="page-content">
+        <!-- Основные метрики -->
+        <section class="row">
+            {% for stat in dashboard_stats %}
+                <div class="col-6 col-lg-3 col-md-6 mb-4">
+                    <div class="card stat-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="text-muted font-semibold mb-2">{{ stat.title }}</h6>
+                                    <h3 class="fw-bold mb-1">
+                                        {% if stat.is_currency %}
+                                            ₺{{ stat.value|floatformat:0|default:"0" }}
+                                        {% else %}
+                                            {{ stat.value }}
+                                        {% endif %}
+                                    </h3>
+                                    <small class="text-success">
+                                        <i class="bi bi-arrow-up-right me-1"></i>{{ stat.trend }}
+                                    </small>
+                                </div>
+                                <div class="stat-icon" style="background: {{ stat.bg_color }}">
+                                    <i class="{{ stat.icon }}"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+
+        <!-- Критические статусы и последние заказы -->
+        <section class="row">
+            <!-- Критические статусы -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-warning bg-opacity-10">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+                            {% trans "Önemli Durumlar" %}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for durum in kritik_durumlar %}
+                                <div class="col-12 mb-3">
+                                    <div class="d-flex align-items-center p-3 border rounded-3 bg-light">
+                                        <div class="flex-shrink-0">
+                                            <div class="status-avatar bg-{{ durum.renk }}">
+                                                <i class="{{ durum.icon }}"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-1">{{ durum.label }}</h6>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-muted">{{ durum.sayi }} sipariş</span>
+                                                <strong class="text-{{ durum.renk }}">₺{{ durum.toplam_tutar|floatformat:0 }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Последние заказы -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clock-history me-2"></i>
+                            {% trans "Son Siparişler" %}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if son_siparisler %}
+                            <div class="list-group list-group-flush">
+                                {% for siparis in son_siparisler %}
+                                    <div class="list-group-item border-0 px-0 py-3">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div>
+                                                <h6 class="mb-1">{{ siparis.siparis_no }}</h6>
+                                                <small class="text-muted">{{ siparis.musteri.ad }}</small>
+                                            </div>
+                                            <div class="text-end">
+                                    <span class="badge bg-{{ siparis.durum_renk }} mb-1">
+                                        {{ siparis.get_durum_display }}
+                                    </span>
+                                                <div>
+                                                    <small class="text-success fw-bold">₺{{ siparis.get_toplam_tutar|floatformat:0 }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="bi bi-inbox display-4 text-muted"></i>
+                                <p class="text-muted mt-3">{% trans "Henüz sipariş bulunmuyor" %}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Все статусы в красивом виде -->
+        <section class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-grid-3x3-gap me-2"></i>
+                            {% trans "Tüm Sipariş Durumları" %}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for durum in durum_istatistikleri %}
+                                <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                                    <div class="card status-card border-{{ durum.renk }} h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="status-icon bg-{{ durum.renk }} me-3">
+                                                    <i class="{{ durum.icon }}"></i>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="card-title mb-1">{{ durum.label }}</h6>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span class="text-muted">Sipariş</span>
+                                                        <span class="fw-bold text-{{ durum.renk }}">{{ durum.sayi }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="progress mb-2" style="height: 6px;">
+                                                <div class="progress-bar bg-{{ durum.renk }}"
+                                                     style="width: {% widthratio durum.sayi bekleyen_siparis 100 %}%"></div>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">Toplam Değer</small>
+                                                <strong class="text-{{ durum.renk }}">₺{{ durum.toplam_tutar|floatformat:0 }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Профиль пользователя внизу -->
+        <section class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-lg me-3">
+                                    <img src="{% static 'users/assets/compiled/jpg/1.jpg' %}" alt="Profile"
+                                         class="rounded-circle">
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h5>
+                                    <p class="text-muted mb-0">@{{ user.username }}</p>
+                                    <small class="text-success">
+                                        <i class="bi bi-circle-fill me-1"></i>{% trans "Son giriş: Şimdi" %}
+                                    </small>
+                                </div>
+                            </div>
+                            <div>
+                                <form method="post" action="{% url 'users:logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="bi bi-box-arrow-right me-2"></i>{% trans "Çıkış Yap" %}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <style>
+        .stat-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .status-card {
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .status-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .status-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .progress {
+            border-radius: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .card-header {
+            border-bottom: 1px solid #e9ecef;
+            background: transparent;
+        }
+
+        .list-group-item {
+            transition: background-color 0.2s ease;
+        }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .avatar img {
+            border: 3px solid #e9ecef;
+            transition: border-color 0.3s ease;
+        }
+
+        .avatar img:hover {
+            border-color: #007bff;
+        }
+    </style>
 {% endblock %}
