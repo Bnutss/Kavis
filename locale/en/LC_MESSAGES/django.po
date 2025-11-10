@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: K-System 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-10 09:26+0300\n"
+"POT-Creation-Date: 2025-11-10 11:01+0300\n"
 "PO-Revision-Date: 2025-11-10 08:02+0300\n"
 "Last-Translator: K-System Team\n"
 "Language-Team: English\n"
@@ -26,12 +26,13 @@ msgstr "English"
 
 #: directory/templates/directory/musteri_listesi.html:14
 #: directory/templates/directory/musteri_listesi.html:21
-#: templates/mainmenu/sidebar.html:67
+#: templates/mainmenu/sidebar.html:68
 msgid "Müşteriler"
 msgstr "Customers"
 
 #: directory/templates/directory/musteri_listesi.html:20
-#: templates/mainmenu/base.html:26 templates/mainmenu/sidebar.html:49
+#: orders/templates/orders/siparis_listesi.html:21
+#: templates/mainmenu/base.html:27 templates/mainmenu/sidebar.html:49
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -60,6 +61,7 @@ msgid "E-posta"
 msgstr "Email"
 
 #: directory/templates/directory/musteri_listesi.html:48
+#: orders/templates/orders/siparis_listesi.html:315
 msgid "Durum"
 msgstr "Status"
 
@@ -82,10 +84,13 @@ msgstr "Customer Name"
 
 #: directory/templates/directory/musteri_listesi.html:111
 #: directory/templates/directory/musteri_listesi.html:132
+#: orders/templates/orders/siparis_listesi.html:263
+#: orders/templates/orders/siparis_listesi.html:344
 msgid "İptal"
 msgstr "Cancel"
 
 #: directory/templates/directory/musteri_listesi.html:112
+#: orders/templates/orders/siparis_listesi.html:264
 msgid "Kaydet"
 msgstr "Save"
 
@@ -94,6 +99,7 @@ msgid "Müşteriyi Sil"
 msgstr "Delete Customer"
 
 #: directory/templates/directory/musteri_listesi.html:133
+#: orders/templates/orders/siparis_listesi.html:345
 msgid "Sil"
 msgstr "Delete"
 
@@ -101,35 +107,137 @@ msgstr "Delete"
 msgid "Müşteriyi Düzenle"
 msgstr "Edit Customer"
 
-#: directory/templates/directory/musteri_listesi.html:164
-msgid "Müşteriyi silmek istediğinizden emin misiniz?"
+#: directory/templates/directory/musteri_listesi.html:165
+msgid "Müşteriyi силер минеден Эмин мисин?"
 msgstr "Are you sure you want to delete this customer?"
 
-#: templates/mainmenu/base.html:44
-msgid "Profil Görüntülemeleri"
-msgstr "Profile Views"
+#: orders/templates/orders/siparis_listesi.html:15
+#: orders/templates/orders/siparis_listesi.html:22
+#: templates/mainmenu/sidebar.html:60
+msgid "Siparişler"
+msgstr "Orders"
 
-#: templates/mainmenu/base.html:61
-msgid "Takipçiler"
-msgstr "Followers"
+#: orders/templates/orders/siparis_listesi.html:37
+#: orders/templates/orders/siparis_listesi.html:205
+#: orders/templates/orders/siparis_listesi.html:472
+msgid "Yeni Sipariş"
+msgstr "New Order"
 
-#: templates/mainmenu/base.html:78
-msgid "Takip Edilenler"
-msgstr "Following"
+#: orders/templates/orders/siparis_listesi.html:46
+#: orders/templates/orders/siparis_listesi.html:250
+#: orders/templates/orders/siparis_listesi.html:533
+msgid "Üretiliyor"
+msgstr "In Production"
 
-#: templates/mainmenu/base.html:95
-msgid "Kaydedilen Gönderi"
-msgstr "Saved Posts"
+#: orders/templates/orders/siparis_listesi.html:58
+#: orders/templates/orders/siparis_listesi.html:96
+#: orders/templates/orders/siparis_listesi.html:135
+#: orders/templates/orders/siparis_listesi.html:174
+#: orders/templates/orders/siparis_listesi.html:222
+#: orders/templates/orders/siparis_listesi.html:291
+msgid "Miktar"
+msgstr "Quantity"
 
-#: templates/mainmenu/base.html:120
+#: orders/templates/orders/siparis_listesi.html:59
+#: orders/templates/orders/siparis_listesi.html:97
+#: orders/templates/orders/siparis_listesi.html:136
+#: orders/templates/orders/siparis_listesi.html:175
+#: orders/templates/orders/siparis_listesi.html:232
+#: orders/templates/orders/siparis_listesi.html:285
+msgid "Üretici"
+msgstr "Manufacturer"
+
+#: orders/templates/orders/siparis_listesi.html:60
+#: orders/templates/orders/siparis_listesi.html:98
+#: orders/templates/orders/siparis_listesi.html:137
+#: orders/templates/orders/siparis_listesi.html:176
+msgid "Tarih"
+msgstr "Date"
+
+#: orders/templates/orders/siparis_listesi.html:86
+#: orders/templates/orders/siparis_listesi.html:251
+#: orders/templates/orders/siparis_listesi.html:524
+msgid "Hazır, Sevkiyat Bekliyor"
+msgstr "Ready, Awaiting Shipment"
+
+#: orders/templates/orders/siparis_listesi.html:124
+#: orders/templates/orders/siparis_listesi.html:252
+#: orders/templates/orders/siparis_listesi.html:527
+msgid "Sevkiyatta"
+msgstr "In Shipment"
+
+#: orders/templates/orders/siparis_listesi.html:163
+#: orders/templates/orders/siparis_listesi.html:253
+#: orders/templates/orders/siparis_listesi.html:530
+msgid "Tamamlandı"
+msgstr "Completed"
+
+#: orders/templates/orders/siparis_listesi.html:213
+#: orders/templates/orders/siparis_listesi.html:281
+msgid "Müşteri"
+msgstr "Customer"
+
+#: orders/templates/orders/siparis_listesi.html:215
+msgid "Seçiniz"
+msgstr "Select"
+
+#: orders/templates/orders/siparis_listesi.html:228
+#: orders/templates/orders/siparis_listesi.html:295
+msgid "Fiyat"
+msgstr "Price"
+
+#: orders/templates/orders/siparis_listesi.html:238
+#: orders/templates/orders/siparis_listesi.html:305
+msgid "Sipariş Tarihi"
+msgstr "Order Date"
+
+#: orders/templates/orders/siparis_listesi.html:243
+#: orders/templates/orders/siparis_listesi.html:309
+msgid "Sevk Tarihi"
+msgstr "Shipment Date"
+
+#: orders/templates/orders/siparis_listesi.html:248
+msgid "Sipariş Durumu"
+msgstr "Order Status"
+
+#: orders/templates/orders/siparis_listesi.html:257
+#: orders/templates/orders/siparis_listesi.html:321
+msgid "Not"
+msgstr "Note"
+
+#: orders/templates/orders/siparis_listesi.html:275
+msgid "Sipariş Detayları"
+msgstr "Order Details"
+
+#: orders/templates/orders/siparis_listesi.html:299
+msgid "Toplam Tutar"
+msgstr "Total Amount"
+
+#: orders/templates/orders/siparis_listesi.html:327
+msgid "Kapat"
+msgstr "Close"
+
+#: orders/templates/orders/siparis_listesi.html:337
+msgid "Siparişi Sil"
+msgstr "Delete Order"
+
+#: orders/templates/orders/siparis_listesi.html:491
+msgid "Siparişi Düzenle"
+msgstr "Edit Order"
+
+#: orders/templates/orders/siparis_listesi.html:545
+msgid "Siparişi silmek istediğinizden emin misiniz?"
+msgstr "Are you sure you want to delete this order?"
+
+#: templates/mainmenu/base.html:79
 msgid "Çıkış Yap"
 msgstr "Logout"
 
-#: templates/mainmenu/base.html:138
+#: templates/mainmenu/base.html:99
 msgid "Crafted with"
 msgstr "Crafted with"
 
-#: templates/mainmenu/base.html:140
+#: templates/mainmenu/base.html:101
 msgid "by"
 msgstr "by"
 
@@ -141,11 +249,7 @@ msgstr "Menu"
 msgid "Bilgiler"
 msgstr "Information"
 
-#: templates/mainmenu/sidebar.html:59
-msgid "Siparişler"
-msgstr "Orders"
-
-#: templates/mainmenu/sidebar.html:63
+#: templates/mainmenu/sidebar.html:64
 msgid "Araçlar"
 msgstr "Tools"
 
@@ -153,38 +257,38 @@ msgstr "Tools"
 msgid "Giriş"
 msgstr "Login"
 
-#: users/templates/users/auth/login_page.html:23
+#: users/templates/users/auth/login_page.html:24
 msgid "Sistem yükleniyor"
 msgstr "System loading"
 
-#: users/templates/users/auth/login_page.html:37
+#: users/templates/users/auth/login_page.html:38
 msgid "Gelecek burada başlıyor"
 msgstr "The future starts here"
 
-#: users/templates/users/auth/login_page.html:41
+#: users/templates/users/auth/login_page.html:42
 msgid "Güvenli • Hızlı • Modern"
 msgstr "Secure • Fast • Modern"
 
-#: users/templates/users/auth/login_page.html:61
+#: users/templates/users/auth/login_page.html:62
 msgid "Giriş Yap"
 msgstr "Sign In"
 
-#: users/templates/users/auth/login_page.html:62
+#: users/templates/users/auth/login_page.html:63
 msgid "Hesabınıza erişim sağlayın"
 msgstr "Access your account"
 
-#: users/templates/users/auth/login_page.html:68
+#: users/templates/users/auth/login_page.html:69
 msgid "Kullanıcı Adı"
 msgstr "Username"
 
-#: users/templates/users/auth/login_page.html:74
+#: users/templates/users/auth/login_page.html:75
 msgid "Şifre"
 msgstr "Password"
 
-#: users/templates/users/auth/login_page.html:89
+#: users/templates/users/auth/login_page.html:90
 msgid "Sisteme Giriş"
 msgstr "Enter System"
 
-#: users/templates/users/auth/login_page.html:98
+#: users/templates/users/auth/login_page.html:99
 msgid "© 2025 K-System. Tüm hakları saklıdır."
 msgstr "© 2025 K-System. All rights reserved."
