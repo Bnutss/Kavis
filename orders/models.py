@@ -24,7 +24,7 @@ class Siparis(models.Model):
     ]
 
     siparis_no = models.CharField(max_length=50, unique=True, verbose_name="Sipariş No")
-    musteri = models.ForeignKey(Musteri, on_delete=models.CASCADE, verbose_name="Müşteri")
+    musteri = models.ForeignKey(Musteri, on_delete=models.CASCADE, related_name='siparisler', verbose_name="Müşteri")
     urun_cinsi = models.CharField(max_length=255, verbose_name="Ürün Cinsi")
     miktar = models.IntegerField(verbose_name="Miktar")
     fiyat = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Fiyat")

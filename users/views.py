@@ -53,69 +53,57 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Основная статистика
         toplam_musteri = Musteri.objects.count()
-        bekleyen_siparis = Siparis.objects.exclude(durum__in=['tamamlandi', 'iptal', 'teslim_edildi']).count()
-        tamamlanan_siparis = Siparis.objects.filter(durum__in=['tamamlandi', 'teslim_edildi']).count()
 
-        # Расчет общей выручки
-        toplam_hasilat_data = Siparis.objects.filter(
+        active_orders = Siparis.objects.filter(
+            siparis_tarihi__gte=timezone.now().date() - timedelta(days=7)
+        ).count()
+
+        tamamlanan_siparis = Siparis.objects.filter(
+            durum__in=['tamamlandi', 'teslim_edildi']
+        ).count()
+
+        toplam_hasilat = Siparis.objects.filter(
             durum__in=['tamamlandi', 'teslim_edildi']
         ).aggregate(
             total=Sum('fiyat', field='fiyat * miktar')
         )['total'] or 0
 
-        # Статистика за последние 30 дней
-        thirty_days_ago = timezone.now().date() - timedelta(days=30)
-        son_30_gun_hasilat = Siparis.objects.filter(
-            durum__in=['tamamlandi', 'teslim_edildi'],
-            siparis_tarihi__gte=thirty_days_ago
-        ).aggregate(
-            total=Sum('fiyat', field='fiyat * miktar')
-        )['total'] or 0
+        musteri_istatistikleri = []
+        musteriler = Musteri.objects.filter(aktif=True)
 
-        # Активные заказы (последние 7 дней)
-        active_orders = Siparis.objects.filter(
-            siparis_tarihi__gte=timezone.now().date() - timedelta(days=7)
-        ).count()
+        for musteri in musteriler:
+            siparisler = Siparis.objects.filter(musteri=musteri).order_by('-siparis_tarihi')
 
-        # Статистика по статусам
-        durum_choices = dict(Siparis.DURUM_CHOICES)
-        durum_istatistikleri = []
-        kritik_durumlar = []
+            toplam_siparis = siparisler.count()
+            bekleyen = siparisler.exclude(durum__in=['tamamlandi', 'iptal', 'teslim_edildi']).count()
+            tamamlanan = siparisler.filter(durum__in=['tamamlandi', 'teslim_edildi']).count()
 
-        for durum_key, durum_label in durum_choices.items():
-            siparisler = Siparis.objects.filter(durum=durum_key)
-            sayi = siparisler.count()
-            toplam_tutar = siparisler.aggregate(
-                total=Sum('fiyat', field='fiyat * miktar')
-            )['total'] or 0
+            toplam_tutar = sum([s.get_toplam_tutar() for s in siparisler])
+            tamamlanan_tutar = sum([
+                s.get_toplam_tutar() for s in siparisler
+                if s.durum in ['tamamlandi', 'teslim_edildi']
+            ])
 
-            durum_info = {
-                'key': durum_key,
-                'label': durum_label,
-                'sayi': sayi,
-                'toplam_tutar': toplam_tutar,
-                'renk': self.get_durum_renk(durum_key),
-                'icon': self.get_durum_icon(durum_key)
-            }
+            son_siparis = siparisler.first()
+            son_siparis_tarihi = son_siparis.siparis_tarihi if son_siparis else None
 
-            durum_istatistikleri.append(durum_info)
+            if toplam_siparis > 0:
+                musteri_istatistikleri.append({
+                    'musteri': musteri,
+                    'toplam_siparis': toplam_siparis,
+                    'bekleyen_siparis': bekleyen,
+                    'tamamlanan_siparis': tamamlanan,
+                    'toplam_tutar': toplam_tutar,
+                    'tamamlanan_tutar': tamamlanan_tutar,
+                    'son_siparis_tarihi': son_siparis_tarihi,
+                    'tamamlanma_orani': round((tamamlanan / toplam_siparis) * 100, 1),
+                    'siparisler': list(siparisler)
+                })
 
-            # Критические статусы для верхних карточек
-            if durum_key in ['onay_bekliyor', 'uretimde', 'kalite_kontrol']:
-                kritik_durumlar.append(durum_info)
-
-        # Последние заказы
-        son_siparisler = Siparis.objects.select_related('musteri').order_by('-siparis_tarihi')[:5]
+        musteri_istatistikleri.sort(key=lambda x: x['toplam_tutar'], reverse=True)
 
         context.update({
-            'toplam_musteri': toplam_musteri,
-            'bekleyen_siparis': bekleyen_siparis,
-            'tamamlanan_siparis': tamamlanan_siparis,
-            'toplam_hasilat': toplam_hasilat_data,
-            'son_30_gun_hasilat': son_30_gun_hasilat,
-            'active_orders': active_orders,
             'dashboard_stats': [
                 {
                     'title': 'Toplam Müşteri',
@@ -140,53 +128,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 },
                 {
                     'title': 'Toplam Hasılat',
-                    'value': toplam_hasilat_data,
+                    'value': toplam_hasilat,
                     'icon': 'bi-currency-dollar',
                     'bg_color': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
                     'trend': '+15%',
                     'is_currency': True
                 }
             ],
-            'kritik_durumlar': kritik_durumlar[:3],
-            'durum_istatistikleri': durum_istatistikleri,
-            'son_siparisler': son_siparisler
+            'musteri_istatistikleri': musteri_istatistikleri
         })
+
         return context
-
-    def get_durum_renk(self, durum):
-        renkler = {
-            'onay_bekliyor': 'warning',
-            'onaylandi': 'info',
-            'malzeme_satin_alma': 'secondary',
-            'uretimde': 'primary',
-            'print_tkac': 'dark',
-            'boya': 'success',
-            'aksesuar_montaji': 'light',
-            'kalite_kontrol': 'warning',
-            'paketleme': 'info',
-            'teslime_gonderildi': 'primary',
-            'teslim_edildi': 'success',
-            'tamamlandi': 'success',
-            'iade_pererabotka': 'danger',
-            'iptal': 'danger',
-        }
-        return renkler.get(durum, 'secondary')
-
-    def get_durum_icon(self, durum):
-        iconlar = {
-            'onay_bekliyor': 'bi-hourglass-split',
-            'onaylandi': 'bi-check-lg',
-            'malzeme_satin_alma': 'bi-cart',
-            'uretimde': 'bi-gear',
-            'print_tkac': 'bi-printer',
-            'boya': 'bi-brush',
-            'aksesuar_montaji': 'bi-tools',
-            'kalite_kontrol': 'bi-clipboard-check',
-            'paketleme': 'bi-box',
-            'teslime_gonderildi': 'bi-truck',
-            'teslim_edildi': 'bi-house-check',
-            'tamamlandi': 'bi-flag-fill',
-            'iade_pererabotka': 'bi-arrow-return-left',
-            'iptal': 'bi-x-circle',
-        }
-        return iconlar.get(durum, 'bi-circle')
