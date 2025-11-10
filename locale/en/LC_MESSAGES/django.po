@@ -1,0 +1,190 @@
+# K-System Translation File
+# Copyright (C) 2025 K-System
+# This file is distributed under the same license as the K-System package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: K-System 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-10 09:26+0300\n"
+"PO-Revision-Date: 2025-11-10 08:02+0300\n"
+"Last-Translator: K-System Team\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: K/settings.py:89
+msgid "Türkçe"
+msgstr "Turkish"
+
+#: K/settings.py:90
+msgid "English"
+msgstr "English"
+
+#: directory/templates/directory/musteri_listesi.html:14
+#: directory/templates/directory/musteri_listesi.html:21
+#: templates/mainmenu/sidebar.html:67
+msgid "Müşteriler"
+msgstr "Customers"
+
+#: directory/templates/directory/musteri_listesi.html:20
+#: templates/mainmenu/base.html:26 templates/mainmenu/sidebar.html:49
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: directory/templates/directory/musteri_listesi.html:34
+msgid "Müşteri Listesi"
+msgstr "Customer List"
+
+#: directory/templates/directory/musteri_listesi.html:37
+#: directory/templates/directory/musteri_listesi.html:86
+#: directory/templates/directory/musteri_listesi.html:143
+msgid "Yeni Müşteri"
+msgstr "New Customer"
+
+#: directory/templates/directory/musteri_listesi.html:45
+msgid "Ad"
+msgstr "Name"
+
+#: directory/templates/directory/musteri_listesi.html:46
+#: directory/templates/directory/musteri_listesi.html:97
+msgid "Ülke"
+msgstr "Country"
+
+#: directory/templates/directory/musteri_listesi.html:47
+#: directory/templates/directory/musteri_listesi.html:101
+msgid "E-posta"
+msgstr "Email"
+
+#: directory/templates/directory/musteri_listesi.html:48
+msgid "Durum"
+msgstr "Status"
+
+#: directory/templates/directory/musteri_listesi.html:49
+msgid "İşlemler"
+msgstr "Actions"
+
+#: directory/templates/directory/musteri_listesi.html:60
+#: directory/templates/directory/musteri_listesi.html:106
+msgid "Aktif"
+msgstr "Active"
+
+#: directory/templates/directory/musteri_listesi.html:62
+msgid "Pasif"
+msgstr "Inactive"
+
+#: directory/templates/directory/musteri_listesi.html:93
+msgid "Müşteri Adı"
+msgstr "Customer Name"
+
+#: directory/templates/directory/musteri_listesi.html:111
+#: directory/templates/directory/musteri_listesi.html:132
+msgid "İptal"
+msgstr "Cancel"
+
+#: directory/templates/directory/musteri_listesi.html:112
+msgid "Kaydet"
+msgstr "Save"
+
+#: directory/templates/directory/musteri_listesi.html:122
+msgid "Müşteriyi Sil"
+msgstr "Delete Customer"
+
+#: directory/templates/directory/musteri_listesi.html:133
+msgid "Sil"
+msgstr "Delete"
+
+#: directory/templates/directory/musteri_listesi.html:152
+msgid "Müşteriyi Düzenle"
+msgstr "Edit Customer"
+
+#: directory/templates/directory/musteri_listesi.html:164
+msgid "Müşteriyi silmek istediğinizden emin misiniz?"
+msgstr "Are you sure you want to delete this customer?"
+
+#: templates/mainmenu/base.html:44
+msgid "Profil Görüntülemeleri"
+msgstr "Profile Views"
+
+#: templates/mainmenu/base.html:61
+msgid "Takipçiler"
+msgstr "Followers"
+
+#: templates/mainmenu/base.html:78
+msgid "Takip Edilenler"
+msgstr "Following"
+
+#: templates/mainmenu/base.html:95
+msgid "Kaydedilen Gönderi"
+msgstr "Saved Posts"
+
+#: templates/mainmenu/base.html:120
+msgid "Çıkış Yap"
+msgstr "Logout"
+
+#: templates/mainmenu/base.html:138
+msgid "Crafted with"
+msgstr "Crafted with"
+
+#: templates/mainmenu/base.html:140
+msgid "by"
+msgstr "by"
+
+#: templates/mainmenu/sidebar.html:45
+msgid "Menü"
+msgstr "Menu"
+
+#: templates/mainmenu/sidebar.html:55
+msgid "Bilgiler"
+msgstr "Information"
+
+#: templates/mainmenu/sidebar.html:59
+msgid "Siparişler"
+msgstr "Orders"
+
+#: templates/mainmenu/sidebar.html:63
+msgid "Araçlar"
+msgstr "Tools"
+
+#: users/templates/users/auth/login_page.html:8
+msgid "Giriş"
+msgstr "Login"
+
+#: users/templates/users/auth/login_page.html:23
+msgid "Sistem yükleniyor"
+msgstr "System loading"
+
+#: users/templates/users/auth/login_page.html:37
+msgid "Gelecek burada başlıyor"
+msgstr "The future starts here"
+
+#: users/templates/users/auth/login_page.html:41
+msgid "Güvenli • Hızlı • Modern"
+msgstr "Secure • Fast • Modern"
+
+#: users/templates/users/auth/login_page.html:61
+msgid "Giriş Yap"
+msgstr "Sign In"
+
+#: users/templates/users/auth/login_page.html:62
+msgid "Hesabınıza erişim sağlayın"
+msgstr "Access your account"
+
+#: users/templates/users/auth/login_page.html:68
+msgid "Kullanıcı Adı"
+msgstr "Username"
+
+#: users/templates/users/auth/login_page.html:74
+msgid "Şifre"
+msgstr "Password"
+
+#: users/templates/users/auth/login_page.html:89
+msgid "Sisteme Giriş"
+msgstr "Enter System"
+
+#: users/templates/users/auth/login_page.html:98
+msgid "© 2025 K-System. Tüm hakları saklıdır."
+msgstr "© 2025 K-System. All rights reserved."
