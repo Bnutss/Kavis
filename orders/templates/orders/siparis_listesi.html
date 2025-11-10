@@ -1,6 +1,7 @@
 {% extends 'mainmenu/base.html' %}
 {% load static %}
 {% load i18n %}
+{% load custom_filters %}
 
 {% block breadcrumbs %}
     <header class="mb-3">
@@ -17,8 +18,9 @@
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a
-                                    href="{% url 'users:dashboard' %}">{% trans "Dashboard" %}</a></li>
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'users:dashboard' %}">{% trans "Dashboard" %}</a>
+                            </li>
                             <li class="breadcrumb-item active" aria-current="page">{% trans "Siparişler" %}</li>
                         </ol>
                     </nav>
@@ -60,64 +62,37 @@
                     <tbody>
                     {% for siparis in siparisler %}
                         <tr>
-                            <td>{{ siparis.siparis_no }}</td>
+                            <td><strong>{{ siparis.siparis_no }}</strong></td>
                             <td>{{ siparis.musteri.ad }}</td>
                             <td>{{ siparis.urun_cinsi }}</td>
                             <td>{{ siparis.miktar }}</td>
-                            <td>{{ siparis.fiyat }} ₺</td>
-                            <td>{{ siparis.get_toplam_tutar }} ₺</td>
+                            <td>₺{{ siparis.fiyat|floatformat:2 }}</td>
+                            <td><strong>₺{{ siparis.get_toplam_tutar|floatformat:2 }}</strong></td>
                             <td>{{ siparis.siparis_tarihi|date:"d.m.Y" }}</td>
                             <td>{{ siparis.uretici }}</td>
                             <td>{% if siparis.sevk_tarihi %}{{ siparis.sevk_tarihi|date:"d.m.Y" }}{% else %}
                                 -{% endif %}</td>
                             <td>
-                                {% if siparis.durum == 'hazir' %}
-                                    <span class="badge bg-success">{% trans "Hazır, Sevkiyat Bekliyor" %}</span>
-                                {% elif siparis.durum == 'sevkiyatta' %}
-                                    <span class="badge bg-primary">{% trans "Sevkiyatta" %}</span>
-                                {% elif siparis.durum == 'tamamlandi' %}
-                                    <span class="badge bg-secondary">{% trans "Tamamlandı" %}</span>
-                                {% elif siparis.durum == 'uretiliyor' %}
-                                    <span class="badge bg-warning">{% trans "Üretiliyor" %}</span>
-                                {% elif siparis.durum == 'onay_bekliyor' %}
-                                    <span class="badge bg-info">{% trans "Onay Bekliyor" %}</span>
-                                {% elif siparis.durum == 'onaylandi' %}
-                                    <span class="badge bg-success">{% trans "Onaylandı" %}</span>
-                                {% elif siparis.durum == 'malzeme_satin_alma' %}
-                                    <span class="badge bg-primary">{% trans "Malzeme Satın Alma" %}</span>
-                                {% elif siparis.durum == 'uretimde' %}
-                                    <span class="badge bg-warning">{% trans "Üretimde" %}</span>
-                                {% elif siparis.durum == 'print_tkac' %}
-                                    <span class="badge bg-info">{% trans "Baskı/Tkacılık" %}</span>
-                                {% elif siparis.durum == 'boya' %}
-                                    <span class="badge bg-primary">{% trans "Boya" %}</span>
-                                {% elif siparis.durum == 'aksesuar_montaji' %}
-                                    <span class="badge bg-info">{% trans "Aksesuar Montajı" %}</span>
-                                {% elif siparis.durum == 'kalite_kontrol' %}
-                                    <span class="badge bg-warning">{% trans "Kalite Kontrol" %}</span>
-                                {% elif siparis.durum == 'paketleme' %}
-                                    <span class="badge bg-success">{% trans "Paketleme" %}</span>
-                                {% elif siparis.durum == 'teslime_gonderildi' %}
-                                    <span class="badge bg-primary">{% trans "Teslime Gönderildi" %}</span>
-                                {% elif siparis.durum == 'teslim_edildi' %}
-                                    <span class="badge bg-success">{% trans "Teslim Edildi" %}</span>
-                                {% elif siparis.durum == 'iade_pererabotka' %}
-                                    <span class="badge bg-danger">{% trans "İade/Perak" %}</span>
-                                {% elif siparis.durum == 'iptal' %}
-                                    <span class="badge bg-dark">{% trans "İptal" %}</span>
-                                {% endif %}
+                                <span class="badge bg-{{ siparis.durum|get_durum_class }}">
+                                    {{ siparis.get_durum_display }}
+                                </span>
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-info" onclick="openDetailModalById({{ siparis.id }})">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-warning" onclick="openEditModalById({{ siparis.id }})">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger"
-                                        onclick="openDeleteModal({{ siparis.id }}, '{{ siparis.siparis_no|escapejs }}')">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-info" onclick="openDetailModalById({{ siparis.id }})"
+                                            title="{% trans 'Detay' %}">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-warning" onclick="openEditModalById({{ siparis.id }})"
+                                            title="{% trans 'Düzenle' %}">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger"
+                                            onclick="openDeleteModal({{ siparis.id }}, '{{ siparis.siparis_no|escapejs }}')"
+                                            title="{% trans 'Sil' %}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
@@ -221,156 +196,86 @@
     </div>
 
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-gradient-primary text-white">
                     <h5 class="modal-title" id="detailModalLabel">
-                        <i class="bi bi-file-text-fill me-2"></i>{% trans "Sipariş Detayları" %}
+                        <i class="bi bi-file-text me-2"></i>{% trans "Sipariş Detayları" %}
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0 text-primary"><i
-                                    class="bi bi-info-circle me-2"></i>{% trans "Genel Bilgiler" %}</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="border-start border-primary border-3 ps-3">
-                                        <small class="text-muted d-block mb-1">{% trans "Sipariş No" %}</small>
-                                        <strong class="fs-5" id="detail_siparis_no"></strong>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="border-start border-success border-3 ps-3">
-                                        <small class="text-muted d-block mb-1">{% trans "Müşteri" %}</small>
-                                        <strong class="fs-5" id="detail_musteri"></strong>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="border-start border-info border-3 ps-3">
-                                        <small class="text-muted d-block mb-1">{% trans "Durum" %}</small>
-                                        <div id="detail_durum"></div>
-                                    </div>
-                                </div>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Sipariş No" %}</label>
+                                <div class="detail-value" id="detail_siparis_no"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0 text-primary"><i
-                                    class="bi bi-box-seam me-2"></i>{% trans "Ürün Bilgileri" %}</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="bg-primary bg-opacity-10 rounded p-3 me-3">
-                                            <i class="bi bi-box text-primary fs-4"></i>
-                                        </div>
-                                        <div>
-                                            <small class="text-muted d-block">{% trans "Ürün Cinsi" %}</small>
-                                            <strong id="detail_urun_cinsi"></strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="bg-success bg-opacity-10 rounded p-3 me-3">
-                                            <i class="bi bi-building text-success fs-4"></i>
-                                        </div>
-                                        <div>
-                                            <small class="text-muted d-block">{% trans "Üretici" %}</small>
-                                            <strong id="detail_uretici"></strong>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Müşteri" %}</label>
+                                <div class="detail-value" id="detail_musteri"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0 text-primary"><i
-                                    class="bi bi-calculator me-2"></i>{% trans "Fiyat Bilgileri" %}</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="text-center p-3 bg-light rounded">
-                                        <i class="bi bi-hash text-primary fs-3 mb-2"></i>
-                                        <small class="text-muted d-block mb-1">{% trans "Miktar" %}</small>
-                                        <strong class="fs-4 text-primary" id="detail_miktar"></strong>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="text-center p-3 bg-light rounded">
-                                        <i class="bi bi-tag text-success fs-3 mb-2"></i>
-                                        <small class="text-muted d-block mb-1">{% trans "Birim Fiyat" %}</small>
-                                        <strong class="fs-4 text-success" id="detail_fiyat"></strong>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="text-center p-3 bg-primary bg-opacity-10 rounded">
-                                        <i class="bi bi-currency-dollar text-primary fs-3 mb-2"></i>
-                                        <small class="text-muted d-block mb-1">{% trans "Toplam Tutar" %}</small>
-                                        <strong class="fs-4 text-primary" id="detail_toplam"></strong>
-                                    </div>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Ürün" %}</label>
+                                <div class="detail-value" id="detail_urun_cinsi"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0 text-primary"><i
-                                    class="bi bi-calendar-event me-2"></i>{% trans "Tarih Bilgileri" %}</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-info bg-opacity-10 rounded p-3 me-3">
-                                            <i class="bi bi-calendar-plus text-info fs-4"></i>
-                                        </div>
-                                        <div>
-                                            <small class="text-muted d-block">{% trans "Sipariş Tarihi" %}</small>
-                                            <strong class="fs-5" id="detail_siparis_tarihi"></strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-warning bg-opacity-10 rounded p-3 me-3">
-                                            <i class="bi bi-truck text-warning fs-4"></i>
-                                        </div>
-                                        <div>
-                                            <small class="text-muted d-block">{% trans "Sevk Tarihi" %}</small>
-                                            <strong class="fs-5" id="detail_sevk_tarihi"></strong>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Üretici" %}</label>
+                                <div class="detail-value" id="detail_uretici"></div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card shadow-sm" id="detail_not_card" style="display: none;">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0 text-primary"><i class="bi bi-chat-left-text me-2"></i>{% trans "Notlar" %}
-                            </h6>
+                        <div class="col-md-4">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Miktar" %}</label>
+                                <div class="detail-value text-primary" id="detail_miktar"></div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="alert alert-info mb-0">
-                                <p class="mb-0" id="detail_not"></p>
+                        <div class="col-md-4">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Fiyat" %}</label>
+                                <div class="detail-value text-success" id="detail_fiyat"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Toplam" %}</label>
+                                <div class="detail-value text-primary fw-bold" id="detail_toplam"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Durum" %}</label>
+                                <div id="detail_durum"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Sipariş Tarihi" %}</label>
+                                <div class="detail-value" id="detail_siparis_tarihi"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Sevk Tarihi" %}</label>
+                                <div class="detail-value" id="detail_sevk_tarihi"></div>
+                            </div>
+                        </div>
+                        <div class="col-12" id="detail_not_container" style="display: none;">
+                            <div class="detail-item">
+                                <label class="detail-label">{% trans "Notlar" %}</label>
+                                <div class="detail-note" id="detail_not"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer bg-light">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="bi bi-x-circle me-2"></i>{% trans "Kapat" %}
                     </button>
@@ -402,6 +307,65 @@
 
     <link rel="stylesheet" href="{% static 'users/assets/extensions/simple-datatables/style.css' %}">
     <link rel="stylesheet" href="{% static 'users/assets/compiled/css/table-datatable.css' %}">
+
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .detail-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            height: 100%;
+        }
+
+        .detail-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #212529;
+        }
+
+        .detail-note {
+            padding: 1rem;
+            background: white;
+            border-left: 4px solid #0d6efd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media print {
+            .modal-header,
+            .modal-footer {
+                display: none !important;
+            }
+
+            .modal-dialog {
+                max-width: 100% !important;
+                margin: 0 !important;
+            }
+
+            .modal-content {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+
+        .btn-group .btn {
+            padding: 0.25rem 0.5rem;
+        }
+    </style>
 
     <script>
         let deleteId = null;
@@ -492,8 +456,8 @@
             document.getElementById('detail_urun_cinsi').textContent = siparis.urun_cinsi;
             document.getElementById('detail_uretici').textContent = siparis.uretici;
             document.getElementById('detail_miktar').textContent = siparis.miktar;
-            document.getElementById('detail_fiyat').textContent = siparis.fiyat + ' ₺';
-            document.getElementById('detail_toplam').textContent = (parseFloat(siparis.miktar) * parseFloat(siparis.fiyat)).toFixed(2) + ' ₺';
+            document.getElementById('detail_fiyat').textContent = '₺' + parseFloat(siparis.fiyat).toFixed(2);
+            document.getElementById('detail_toplam').textContent = '₺' + (parseFloat(siparis.miktar) * parseFloat(siparis.fiyat)).toFixed(2);
             document.getElementById('detail_siparis_tarihi').textContent = siparis.siparis_tarihi_display;
             document.getElementById('detail_sevk_tarihi').textContent = siparis.sevk_tarihi_display;
 
@@ -539,14 +503,14 @@
 
             const durumText = durumMap[siparis.durum] || siparis.durum;
             const durumColor = durumColorMap[siparis.durum] || 'secondary';
-            document.getElementById('detail_durum').innerHTML = '<span class="badge bg-' + durumColor + ' fs-6 px-3 py-2">' + durumText + '</span>';
+            document.getElementById('detail_durum').innerHTML = '<span class="badge bg-' + durumColor + '">' + durumText + '</span>';
 
-            const notCard = document.getElementById('detail_not_card');
+            const notContainer = document.getElementById('detail_not_container');
             if (siparis.not_bilgisi && siparis.not_bilgisi.trim() !== '') {
                 document.getElementById('detail_not').textContent = siparis.not_bilgisi;
-                notCard.style.display = 'block';
+                notContainer.style.display = 'block';
             } else {
-                notCard.style.display = 'none';
+                notContainer.style.display = 'none';
             }
 
             const modal = new bootstrap.Modal(document.getElementById('detailModal'));
@@ -603,10 +567,10 @@
                         successAlert.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
                         successAlert.style.zIndex = '9999';
                         successAlert.innerHTML = `
-                <i class="bi bi-check-circle me-2"></i>
-                Sipariş başarıyla silindi!
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
+                            <i class="bi bi-check-circle me-2"></i>
+                            Sipariş başarıyla silindi!
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        `;
                         document.body.appendChild(successAlert);
 
                         setTimeout(() => {
@@ -655,34 +619,7 @@
                 });
         });
     </script>
-    <style>
-        @media print {
-            .modal-header,
-            .modal-footer {
-                display: none !important;
-            }
 
-            .modal-dialog {
-                max-width: 100% !important;
-                margin: 0 !important;
-            }
-
-            .modal-content {
-                border: none !important;
-                box-shadow: none !important;
-            }
-        }
-
-        .card {
-            border: 1px solid #e0e0e0;
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-        }
-    </style>
     <script src="{% static 'users/assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
     <script src="{% static 'users/assets/static/js/pages/simple-datatables.js' %}"></script>
 {% endblock %}

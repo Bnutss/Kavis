@@ -474,3 +474,9 @@ msgstr "Completed Orders"
 
 msgid "Toplam Hasılat"
 msgstr "Total Revenue"
+
+msgid "Detay"
+msgstr "Detail"
+
+msgid "Düzenle"
+msgstr "Edit"
