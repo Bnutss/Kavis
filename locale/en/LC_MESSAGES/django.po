@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: K-System 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-10 11:01+0300\n"
+"POT-Creation-Date: 2025-11-10 11:58+0300\n"
 "PO-Revision-Date: 2025-11-10 08:02+0300\n"
 "Last-Translator: K-System Team\n"
 "Language-Team: English\n"
@@ -32,7 +32,7 @@ msgstr "Customers"
 
 #: directory/templates/directory/musteri_listesi.html:20
 #: orders/templates/orders/siparis_listesi.html:21
-#: templates/mainmenu/base.html:27 templates/mainmenu/sidebar.html:49
+#: templates/mainmenu/dashboard.html:9 templates/mainmenu/sidebar.html:49
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -61,11 +61,13 @@ msgid "E-posta"
 msgstr "Email"
 
 #: directory/templates/directory/musteri_listesi.html:48
-#: orders/templates/orders/siparis_listesi.html:315
+#: orders/templates/orders/siparis_listesi.html:56
+#: orders/templates/orders/siparis_listesi.html:255
 msgid "Durum"
 msgstr "Status"
 
 #: directory/templates/directory/musteri_listesi.html:49
+#: orders/templates/orders/siparis_listesi.html:57
 msgid "İşlemler"
 msgstr "Actions"
 
@@ -84,13 +86,16 @@ msgstr "Customer Name"
 
 #: directory/templates/directory/musteri_listesi.html:111
 #: directory/templates/directory/musteri_listesi.html:132
-#: orders/templates/orders/siparis_listesi.html:263
-#: orders/templates/orders/siparis_listesi.html:344
+#: orders/templates/orders/siparis_listesi.html:107
+#: orders/templates/orders/siparis_listesi.html:205
+#: orders/templates/orders/siparis_listesi.html:215
+#: orders/templates/orders/siparis_listesi.html:396
+#: orders/templates/orders/siparis_listesi.html:517
 msgid "İptal"
 msgstr "Cancel"
 
 #: directory/templates/directory/musteri_listesi.html:112
-#: orders/templates/orders/siparis_listesi.html:264
+#: orders/templates/orders/siparis_listesi.html:216
 msgid "Kaydet"
 msgstr "Save"
 
@@ -99,7 +104,7 @@ msgid "Müşteriyi Sil"
 msgstr "Delete Customer"
 
 #: directory/templates/directory/musteri_listesi.html:133
-#: orders/templates/orders/siparis_listesi.html:345
+#: orders/templates/orders/siparis_listesi.html:397
 msgid "Sil"
 msgstr "Delete"
 
@@ -108,7 +113,7 @@ msgid "Müşteriyi Düzenle"
 msgstr "Edit Customer"
 
 #: directory/templates/directory/musteri_listesi.html:165
-msgid "Müşteriyi силер минеден Эмин мисин?"
+msgid "Müşteriyi silmek istediğinizden emin misiniz?"
 msgstr "Are you sure you want to delete this customer?"
 
 #: orders/templates/orders/siparis_listesi.html:15
@@ -117,129 +122,262 @@ msgstr "Are you sure you want to delete this customer?"
 msgid "Siparişler"
 msgstr "Orders"
 
-#: orders/templates/orders/siparis_listesi.html:37
-#: orders/templates/orders/siparis_listesi.html:205
-#: orders/templates/orders/siparis_listesi.html:472
+#: orders/templates/orders/siparis_listesi.html:36
+msgid "Sipariş Listesi"
+msgstr "Order List"
+
+#: orders/templates/orders/siparis_listesi.html:39
+#: orders/templates/orders/siparis_listesi.html:134
+#: orders/templates/orders/siparis_listesi.html:445
 msgid "Yeni Sipariş"
 msgstr "New Order"
 
-#: orders/templates/orders/siparis_listesi.html:46
-#: orders/templates/orders/siparis_listesi.html:250
-#: orders/templates/orders/siparis_listesi.html:533
-msgid "Üretiliyor"
-msgstr "In Production"
+#: orders/templates/orders/siparis_listesi.html:47
+#: orders/templates/orders/siparis_listesi.html:142
+#: orders/templates/orders/siparis_listesi.html:243
+msgid "Sipariş No"
+msgstr "Order Number"
 
-#: orders/templates/orders/siparis_listesi.html:58
-#: orders/templates/orders/siparis_listesi.html:96
-#: orders/templates/orders/siparis_listesi.html:135
-#: orders/templates/orders/siparis_listesi.html:174
-#: orders/templates/orders/siparis_listesi.html:222
-#: orders/templates/orders/siparis_listesi.html:291
-msgid "Miktar"
-msgstr "Quantity"
-
-#: orders/templates/orders/siparis_listesi.html:59
-#: orders/templates/orders/siparis_listesi.html:97
-#: orders/templates/orders/siparis_listesi.html:136
-#: orders/templates/orders/siparis_listesi.html:175
-#: orders/templates/orders/siparis_listesi.html:232
-#: orders/templates/orders/siparis_listesi.html:285
-msgid "Üretici"
-msgstr "Manufacturer"
-
-#: orders/templates/orders/siparis_listesi.html:60
-#: orders/templates/orders/siparis_listesi.html:98
-#: orders/templates/orders/siparis_listesi.html:137
-#: orders/templates/orders/siparis_listesi.html:176
-msgid "Tarih"
-msgstr "Date"
-
-#: orders/templates/orders/siparis_listesi.html:86
-#: orders/templates/orders/siparis_listesi.html:251
-#: orders/templates/orders/siparis_listesi.html:524
-msgid "Hazır, Sevkiyat Bekliyor"
-msgstr "Ready, Awaiting Shipment"
-
-#: orders/templates/orders/siparis_listesi.html:124
-#: orders/templates/orders/siparis_listesi.html:252
-#: orders/templates/orders/siparis_listesi.html:527
-msgid "Sevkiyatta"
-msgstr "In Shipment"
-
-#: orders/templates/orders/siparis_listesi.html:163
-#: orders/templates/orders/siparis_listesi.html:253
-#: orders/templates/orders/siparis_listesi.html:530
-msgid "Tamamlandı"
-msgstr "Completed"
-
-#: orders/templates/orders/siparis_listesi.html:213
-#: orders/templates/orders/siparis_listesi.html:281
+#: orders/templates/orders/siparis_listesi.html:48
+#: orders/templates/orders/siparis_listesi.html:146
+#: orders/templates/orders/siparis_listesi.html:249
 msgid "Müşteri"
 msgstr "Customer"
 
-#: orders/templates/orders/siparis_listesi.html:215
-msgid "Seçiniz"
-msgstr "Select"
+#: orders/templates/orders/siparis_listesi.html:49
+#: orders/templates/orders/siparis_listesi.html:157
+#: orders/templates/orders/siparis_listesi.html:276
+msgid "Ürün Cinsi"
+msgstr "Product Type"
 
-#: orders/templates/orders/siparis_listesi.html:228
-#: orders/templates/orders/siparis_listesi.html:295
+#: orders/templates/orders/siparis_listesi.html:50
+#: orders/templates/orders/siparis_listesi.html:161
+#: orders/templates/orders/siparis_listesi.html:306
+msgid "Miktar"
+msgstr "Quantity"
+
+#: orders/templates/orders/siparis_listesi.html:51
+#: orders/templates/orders/siparis_listesi.html:167
 msgid "Fiyat"
 msgstr "Price"
 
-#: orders/templates/orders/siparis_listesi.html:238
-#: orders/templates/orders/siparis_listesi.html:305
+#: orders/templates/orders/siparis_listesi.html:52
+msgid "Toplam"
+msgstr "Total"
+
+#: orders/templates/orders/siparis_listesi.html:53
+#: orders/templates/orders/siparis_listesi.html:177
+#: orders/templates/orders/siparis_listesi.html:341
 msgid "Sipariş Tarihi"
 msgstr "Order Date"
 
-#: orders/templates/orders/siparis_listesi.html:243
-#: orders/templates/orders/siparis_listesi.html:309
+#: orders/templates/orders/siparis_listesi.html:54
+#: orders/templates/orders/siparis_listesi.html:171
+#: orders/templates/orders/siparis_listesi.html:287
+msgid "Üretici"
+msgstr "Manufacturer"
+
+#: orders/templates/orders/siparis_listesi.html:55
+#: orders/templates/orders/siparis_listesi.html:182
+#: orders/templates/orders/siparis_listesi.html:352
 msgid "Sevk Tarihi"
 msgstr "Shipment Date"
 
-#: orders/templates/orders/siparis_listesi.html:248
+#: orders/templates/orders/siparis_listesi.html:75
+#: orders/templates/orders/siparis_listesi.html:199
+#: orders/templates/orders/siparis_listesi.html:501
+msgid "Hazır, Sevkiyat Bekliyor"
+msgstr "Ready, Awaiting Shipment"
+
+#: orders/templates/orders/siparis_listesi.html:77
+#: orders/templates/orders/siparis_listesi.html:200
+#: orders/templates/orders/siparis_listesi.html:502
+msgid "Sevkiyatta"
+msgstr "In Shipment"
+
+#: orders/templates/orders/siparis_listesi.html:79
+#: orders/templates/orders/siparis_listesi.html:203
+#: orders/templates/orders/siparis_listesi.html:503
+msgid "Tamamlandı"
+msgstr "Completed"
+
+#: orders/templates/orders/siparis_listesi.html:81
+#: orders/templates/orders/siparis_listesi.html:198
+#: orders/templates/orders/siparis_listesi.html:504
+msgid "Üretiliyor"
+msgstr "In Production"
+
+#: orders/templates/orders/siparis_listesi.html:83
+#: orders/templates/orders/siparis_listesi.html:189
+#: orders/templates/orders/siparis_listesi.html:505
+msgid "Onay Bekliyor"
+msgstr "Awaiting Approval"
+
+#: orders/templates/orders/siparis_listesi.html:85
+#: orders/templates/orders/siparis_listesi.html:190
+#: orders/templates/orders/siparis_listesi.html:506
+msgid "Onaylandı"
+msgstr "Approved"
+
+#: orders/templates/orders/siparis_listesi.html:87
+#: orders/templates/orders/siparis_listesi.html:191
+#: orders/templates/orders/siparis_listesi.html:507
+msgid "Malzeme Satın Alma"
+msgstr "Material Procurement"
+
+#: orders/templates/orders/siparis_listesi.html:89
+#: orders/templates/orders/siparis_listesi.html:192
+#: orders/templates/orders/siparis_listesi.html:508
+msgid "Üretimde"
+msgstr "In Production"
+
+#: orders/templates/orders/siparis_listesi.html:91
+#: orders/templates/orders/siparis_listesi.html:193
+#: orders/templates/orders/siparis_listesi.html:509
+msgid "Baskı/Tkacılık"
+msgstr "Printing/Weaving"
+
+#: orders/templates/orders/siparis_listesi.html:93
+#: orders/templates/orders/siparis_listesi.html:194
+#: orders/templates/orders/siparis_listesi.html:510
+msgid "Boya"
+msgstr "Dyeing"
+
+#: orders/templates/orders/siparis_listesi.html:95
+#: orders/templates/orders/siparis_listesi.html:195
+#: orders/templates/orders/siparis_listesi.html:511
+msgid "Aksesuar Montajı"
+msgstr "Accessory Assembly"
+
+#: orders/templates/orders/siparis_listesi.html:97
+#: orders/templates/orders/siparis_listesi.html:196
+#: orders/templates/orders/siparis_listesi.html:512
+msgid "Kalite Kontrol"
+msgstr "Quality Control"
+
+#: orders/templates/orders/siparis_listesi.html:99
+#: orders/templates/orders/siparis_listesi.html:197
+#: orders/templates/orders/siparis_listesi.html:513
+msgid "Paketleme"
+msgstr "Packaging"
+
+#: orders/templates/orders/siparis_listesi.html:101
+#: orders/templates/orders/siparis_listesi.html:201
+#: orders/templates/orders/siparis_listesi.html:514
+msgid "Teslime Gönderildi"
+msgstr "Sent for Delivery"
+
+#: orders/templates/orders/siparis_listesi.html:103
+#: orders/templates/orders/siparis_listesi.html:202
+#: orders/templates/orders/siparis_listesi.html:515
+msgid "Teslim Edildi"
+msgstr "Delivered"
+
+#: orders/templates/orders/siparis_listesi.html:105
+#: orders/templates/orders/siparis_listesi.html:204
+#: orders/templates/orders/siparis_listesi.html:516
+msgid "İade/Perak"
+msgstr "Return/Reprocessing"
+
+#: orders/templates/orders/siparis_listesi.html:148
+msgid "Seçiniz"
+msgstr "Select"
+
+#: orders/templates/orders/siparis_listesi.html:187
 msgid "Sipariş Durumu"
 msgstr "Order Status"
 
-#: orders/templates/orders/siparis_listesi.html:257
-#: orders/templates/orders/siparis_listesi.html:321
+#: orders/templates/orders/siparis_listesi.html:209
 msgid "Not"
 msgstr "Note"
 
-#: orders/templates/orders/siparis_listesi.html:275
+#: orders/templates/orders/siparis_listesi.html:228
 msgid "Sipariş Detayları"
 msgstr "Order Details"
 
+#: orders/templates/orders/siparis_listesi.html:237
+msgid "Genel Bilgiler"
+msgstr "General Information"
+
+#: orders/templates/orders/siparis_listesi.html:266
+msgid "Ürün Bilgileri"
+msgstr "Product Information"
+
 #: orders/templates/orders/siparis_listesi.html:299
+msgid "Fiyat Bilgileri"
+msgstr "Price Information"
+
+#: orders/templates/orders/siparis_listesi.html:313
+msgid "Birim Fiyat"
+msgstr "Unit Price"
+
+#: orders/templates/orders/siparis_listesi.html:320
 msgid "Toplam Tutar"
 msgstr "Total Amount"
 
-#: orders/templates/orders/siparis_listesi.html:327
+#: orders/templates/orders/siparis_listesi.html:331
+msgid "Tarih Bilgileri"
+msgstr "Date Information"
+
+#: orders/templates/orders/siparis_listesi.html:363
+msgid "Notlar"
+msgstr "Notes"
+
+#: orders/templates/orders/siparis_listesi.html:375
 msgid "Kapat"
 msgstr "Close"
 
-#: orders/templates/orders/siparis_listesi.html:337
+#: orders/templates/orders/siparis_listesi.html:378
+msgid "Yazdır"
+msgstr "Print"
+
+#: orders/templates/orders/siparis_listesi.html:389
 msgid "Siparişi Sil"
 msgstr "Delete Order"
 
-#: orders/templates/orders/siparis_listesi.html:491
+#: orders/templates/orders/siparis_listesi.html:466
 msgid "Siparişi Düzenle"
 msgstr "Edit Order"
 
-#: orders/templates/orders/siparis_listesi.html:545
+#: orders/templates/orders/siparis_listesi.html:562
 msgid "Siparişi silmek istediğinizden emin misiniz?"
 msgstr "Are you sure you want to delete this order?"
 
-#: templates/mainmenu/base.html:79
-msgid "Çıkış Yap"
-msgstr "Logout"
-
-#: templates/mainmenu/base.html:99
+#: templates/mainmenu/base.html:40
 msgid "Crafted with"
 msgstr "Crafted with"
 
-#: templates/mainmenu/base.html:101
+#: templates/mainmenu/base.html:42
 msgid "by"
 msgstr "by"
+
+#: templates/mainmenu/dashboard.html:10
+msgid "Sipariş takip sistemine hoş geldiniz"
+msgstr "Welcome to the order tracking system"
+
+#: templates/mainmenu/dashboard.html:62
+msgid "Önemli Durumlar"
+msgstr "Important Statuses"
+
+#: templates/mainmenu/dashboard.html:96
+msgid "Son Siparişler"
+msgstr "Recent Orders"
+
+#: templates/mainmenu/dashboard.html:124
+msgid "Henüz sipariş bulunmuyor"
+msgstr "No orders found yet"
+
+#: templates/mainmenu/dashboard.html:139
+msgid "Tüm Sipariş Durumları"
+msgstr "All Order Statuses"
+
+#: templates/mainmenu/dashboard.html:193
+msgid "Son giriş: Şimdi"
+msgstr "Last login: Now"
+
+#: templates/mainmenu/dashboard.html:201
+msgid "Çıkış Yap"
+msgstr "Logout"
 
 #: templates/mainmenu/sidebar.html:45
 msgid "Menü"
@@ -292,3 +430,28 @@ msgstr "Enter System"
 #: users/templates/users/auth/login_page.html:99
 msgid "© 2025 K-System. Tüm hakları saklıdır."
 msgstr "© 2025 K-System. All rights reserved."
+
+# Dashboard specific translations
+msgid "Toplam Müşteri"
+msgstr "Total Customers"
+
+msgid "Aktif Siparişler"
+msgstr "Active Orders"
+
+msgid "Tamamlanan Sipariş"
+msgstr "Completed Orders"
+
+msgid "Toplam Hasılat"
+msgstr "Total Revenue"
+
+msgid "Sipariş"
+msgstr "Order"
+
+msgid "Toplam Değer"
+msgstr "Total Value"
+
+msgid "Rapor İndir"
+msgstr "Download Report"
+
+msgid "Tüm siparişlerin mevcut durum dağılımı"
+msgstr "Current status distribution of all orders"
